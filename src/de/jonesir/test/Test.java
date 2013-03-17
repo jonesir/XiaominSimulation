@@ -8,7 +8,6 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		GaloisField gf = GaloisField.getInstance();
 		log(""+gf.add(2,3));
 	}
@@ -16,5 +15,4 @@ public class Test {
 	public static void log(String logString){
 		System.out.println(logString);
 	}
-
 }
