@@ -18,7 +18,7 @@ public class Block {
 
 	}
 
-	public Block(long blockContent, long blockID, Package belongingPackage) {
+	public Block(long blockContent, Package belongingPackage) {
 		this.blockContent = blockContent;
 		this.ID = generateBlockID();
 		this.routeID = this.ID % Block.routeNr;

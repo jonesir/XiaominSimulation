@@ -1,5 +1,45 @@
 package de.jonesir.client;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+
+import de.jonesir.beans.Block;
+import de.jonesir.beans.Package;
 
 public class ClientLauncher {
-
+	
+	private static final long blockCount = 10000;
+	
+	public static void main(String[] args){
+		
+		ArrayList<Package> packageList = new ArrayList<Package>();
+		
+		Package p = null;
+		Block b = null;
+		
+		for(int i = 0 ; i < blockCount ; i++){
+			if(i % Package.size == 0){
+				if(p!=null)
+					packageList.add(p);
+				p = new Package();
+			}
+			b = new Block(123, p);
+			p.addBlock(b);
+		}
+		
+		send(packageList);
+	}
+	
+	private static void send(ArrayList<Package> packageList){
+		
+		try {
+			Socket s = new Socket("127.0.0.1", 4189);
+			
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
