@@ -12,13 +12,13 @@ public class Block {
 	private long blockContent;
 	private long ID;
 	private long routeID;
-	private Package belongingPackage;
+	private Packet belongingPackage;
 
 	public static void main(String[] args) {
 
 	}
 
-	public Block(long blockContent, Package belongingPackage) {
+	public Block(long blockContent, Packet belongingPackage) {
 		this.blockContent = blockContent;
 		this.ID = generateBlockID();
 		this.routeID = this.ID % Block.routeNr;
@@ -29,7 +29,7 @@ public class Block {
 		return this.ID;
 	}
 
-	public Package getBelongingPackage() {
+	public Packet getBelongingPackage() {
 		return this.belongingPackage;
 	}
 
@@ -38,7 +38,7 @@ public class Block {
 	}
 
 	public String toBinaryString() {
-		return Package.formatBinaryString(Long.toBinaryString(this.blockContent), contentLength) + Package.formatBinaryString(Long.toBinaryString(this.ID), IDLength);
+		return Packet.formatBinaryString(Long.toBinaryString(this.blockContent), contentLength) + Packet.formatBinaryString(Long.toBinaryString(this.ID), IDLength);
 	}
 
 	public long generateBlockID() {

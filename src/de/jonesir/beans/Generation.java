@@ -2,7 +2,7 @@ package de.jonesir.beans;
 
 import java.util.ArrayList;
 
-public class Package {
+public class Generation {
 
 	/**
 	 * @param args
@@ -10,24 +10,24 @@ public class Package {
 	public static void main(String[] args) {
 	}
 
-	private ArrayList<Block> blocks = null;
+	private ArrayList<Packet> packets = null;
 	private long ID;
 	private static final int IDLength = 16;
 	public static final int size = 4;
-	public static int length = Package.size * Block.length + IDLength;
+	public static int length = Packet.size * Packet.length;
 	private static long IDGen = 0;
 
-	public Package() {
-		this.blocks = new ArrayList<Block>();
-		this.ID = generatePackageID();
+	public Generation() {
+		this.packets = new ArrayList<Packet>();
+		this.ID = generateGenerationID();
 	}
 
-	public void addBlock(Block block) {
-		this.blocks.add(block);
+	public void addPacket(Packet packet) {
+		this.packets.add(packet);
 	}
 
-	public ArrayList<Block> getBlocks() {
-		return this.blocks;
+	public ArrayList<Packet> getPackets() {
+		return this.packets;
 	}
 
 	public long getID() {
@@ -36,15 +36,12 @@ public class Package {
 
 	public String toBinaryString() {
 		String binaryString = "";
-		for (Block block : this.blocks) {
-			binaryString += block.toBinaryString();
+		for (Packet packet : this.packets) {
+			binaryString += packet.toBinaryString();
 		}
-		String idBinary = Long.toBinaryString(this.ID);
-		if (idBinary.length() == IDLength)
-			binaryString += idBinary;
-
 		binaryString += formatBinaryString(Long.toBinaryString(this.ID),
-				this.IDLength);
+				IDLength);
+		
 		return binaryString;
 	}
 
@@ -64,7 +61,7 @@ public class Package {
 		return binaryString;
 	}
 
-	private long generatePackageID() {
+	private long generateGenerationID() {
 		return IDGen++;
 	}
 }

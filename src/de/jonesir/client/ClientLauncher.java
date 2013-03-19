@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import de.jonesir.beans.Block;
-import de.jonesir.beans.Package;
+import de.jonesir.beans.Packet;
 
 public class ClientLauncher {
 	
@@ -13,16 +13,16 @@ public class ClientLauncher {
 	
 	public static void main(String[] args){
 		
-		ArrayList<Package> packageList = new ArrayList<Package>();
+		ArrayList<Packet> packageList = new ArrayList<Packet>();
 		
-		Package p = null;
+		Packet p = null;
 		Block b = null;
 		
 		for(int i = 0 ; i < blockCount ; i++){
-			if(i % Package.size == 0){
+			if(i % Packet.size == 0){
 				if(p!=null)
 					packageList.add(p);
-				p = new Package();
+				p = new Packet();
 			}
 			b = new Block(123, p);
 			p.addBlock(b);
@@ -31,7 +31,11 @@ public class ClientLauncher {
 		send(packageList);
 	}
 	
-	private static void send(ArrayList<Package> packageList){
+	public static void encoding(ArrayList<Packet> packageList){
+		
+	}
+	
+	private static void send(ArrayList<Packet> packageList){
 		
 		try {
 			Socket s = new Socket("127.0.0.1", 4189);

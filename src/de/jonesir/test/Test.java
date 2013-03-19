@@ -1,6 +1,6 @@
 package de.jonesir.test;
 
-import de.jonesir.algo.GaloisField;
+import de.jonesir.algo.standalone.GaloisField;
 
 public class Test {
 
@@ -8,8 +8,6 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GaloisField gf = GaloisField.getInstance();
-		log(""+gf.add(2,3));
 	}
 	
 	public static void log(String logString){
