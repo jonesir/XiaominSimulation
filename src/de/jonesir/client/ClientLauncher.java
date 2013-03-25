@@ -4,10 +4,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.jonesir.beans.Block;
 import de.jonesir.server.Server;
+import de.jonesir.beans.Packet;
 
 public class ClientLauncher {
 
-    private static final long blockCount = 10000;
+    private static final int blockCount = 10000;
     public static LinkedBlockingQueue<String> buffer1 = new LinkedBlockingQueue<String>();
     public static LinkedBlockingQueue<String> buffer2 = new LinkedBlockingQueue<String>();
     public static LinkedBlockingQueue<String> buffer3 = new LinkedBlockingQueue<String>();
@@ -53,7 +54,8 @@ public class ClientLauncher {
 	    }
 
 	    // Scenario with coding
-	}
+	
 	System.out.println("Simulation Finished!");
     }
+}
 }
