@@ -10,6 +10,8 @@ public class Test {
 	public static void main(String[] args) {
 		GaloisField gf = GaloisField.getInstance();
 		log(""+gf.add(2,3));
+		int d = 0;
+		log("" + d++%4);
 	}
 	
 	public static void log(String logString){

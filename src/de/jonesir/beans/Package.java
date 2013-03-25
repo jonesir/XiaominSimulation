@@ -8,14 +8,17 @@ public class Package {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+	    for(int i = 0; i<40 ; i++)
+	    System.out.println("" + generatePackageID());
 	}
 
 	private ArrayList<Block> blocks = null;
 	private long ID;
-	private static final int IDLength = 16;
-	public static final int size = 4;
+	private static final int IDLength = 8;
+	public static final int size = 1;
 	public static int length = Package.size * Block.length + IDLength;
 	private static long IDGen = 0;
+	private static final int linkCount = 4;
 
 	public Package() {
 		this.blocks = new ArrayList<Block>();
@@ -36,19 +39,19 @@ public class Package {
 
 	public String toBinaryString() {
 		String binaryString = "";
+		// concatenate blocks
 		for (Block block : this.blocks) {
-			binaryString += block.toBinaryString();
+			binaryString += block.toBinaryString().substring(0,Block.length);
 		}
-		String idBinary = Long.toBinaryString(this.ID);
-		if (idBinary.length() == IDLength)
-			binaryString += idBinary;
-
+		
+		// appending package id
 		binaryString += formatBinaryString(Long.toBinaryString(this.ID),
-				this.IDLength);
+				Package.IDLength, "package.toBinaryString");
+		
 		return binaryString;
 	}
 
-	public static String formatBinaryString(String binaryString, int length) {
+	public static String formatBinaryString(String binaryString, int length, String id) {
 		if (binaryString.length() == length)
 			return binaryString;
 		else if (binaryString.length() < length) {
@@ -57,14 +60,17 @@ public class Package {
 				binaryString = "0" + binaryString;
 			}
 		} else if (binaryString.length() > length) {
-			System.out.println("Wrong binary format, it is too long!");
+			System.out.println("Wrong binary format, it is too long! ==> ID: " + id + "..." + binaryString + " has the length " + binaryString.length() + " allowed length : " + length);
 			System.exit(0);
 		}
 
 		return binaryString;
 	}
 
-	private long generatePackageID() {
-		return IDGen++;
+	private static long generatePackageID() {
+	    if((IDGen/linkCount)>=(2<<(IDLength-1))){
+		IDGen=0;
+	    }
+	    return IDGen++/linkCount;
 	}
 }

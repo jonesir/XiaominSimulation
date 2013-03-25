@@ -4,8 +4,7 @@ public class Block {
 
 	// basic general information of blocks
 	public static final int length = 66;
-	public static final int IDLength = 16;
-	public static final int contentLength = 50;
+	public static final int IDLength = 6;
 	private static long IDGen = 0;
 	public static int routeNr = 4;
 	// ----------------------------------------------
@@ -15,7 +14,8 @@ public class Block {
 	private Package belongingPackage;
 
 	public static void main(String[] args) {
-
+	    
+	    System.out.println("" + (2<<IDLength));
 	}
 
 	public Block(long blockContent, Package belongingPackage) {
@@ -38,10 +38,13 @@ public class Block {
 	}
 
 	public String toBinaryString() {
-		return Package.formatBinaryString(Long.toBinaryString(this.blockContent), contentLength) + Package.formatBinaryString(Long.toBinaryString(this.ID), IDLength);
+		return Package.formatBinaryString(Long.toBinaryString(this.blockContent), length, "content") + Package.formatBinaryString(Long.toBinaryString(ID), IDLength, "id");
 	}
 
 	public long generateBlockID() {
-		return IDGen++;
+	    if(IDGen>=(2<<(IDLength-1))){
+		IDGen=0;
+	    }
+	    return IDGen++;
 	}
 }

@@ -5,15 +5,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-	public static void main(String[] args){
-		try {
-			ServerSocket ss = new ServerSocket(4189);
-			Socket s = ss.accept();
-			
-			ServerProcesser processer = new ServerProcesser();
-			processer.process(s);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public static final int port1 = 4189, port2 = 4190, port3 = 4191, port4 = 4192;
+    public static void main(String[] args) {
+
+	// for thread with generate server socket listening on different ports
+	new ServerProcesser(port1).start();
+	new ServerProcesser(port2).start();
+	new ServerProcesser(port3).start();
+	new ServerProcesser(port4).start();
+    }
 }
