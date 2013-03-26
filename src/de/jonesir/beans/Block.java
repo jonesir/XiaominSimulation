@@ -3,8 +3,9 @@ package de.jonesir.beans;
 public class Block {
 
 	// basic general information of blocks
-	public static final int length = 66;
+	public static final int lengthWithoutIdentifier = 66;
 	public static final int IDLength = 6;
+	public static final int length = Block.lengthWithoutIdentifier + Block.IDLength;
 	private static long IDGen = 0;
 	public static int routeNr = 4;
 	// ----------------------------------------------
@@ -38,7 +39,11 @@ public class Block {
 	}
 
 	public String toBinaryString() {
-		return Package.formatBinaryString(Long.toBinaryString(this.blockContent), length, "content") + Package.formatBinaryString(Long.toBinaryString(ID), IDLength, "id");
+		return Packet.formatBinaryString(Long.toBinaryString(this.blockContent), lengthWithoutIdentifier) + Packet.formatBinaryString(Long.toBinaryString(ID), IDLength);
+	}
+	
+	public String toBinaryStringWithoutIdentifier(){
+		return Packet.formatBinaryString(Long.toBinaryString(this.blockContent), lengthWithoutIdentifier);
 	}
 
 	public long generateBlockID() {
