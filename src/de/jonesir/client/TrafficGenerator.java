@@ -63,9 +63,9 @@ public class TrafficGenerator extends Thread {
 			// the loop to take Block from buffer and send to corresponding server and port
 			while (true) {
 				dataString = buffer.take();
-				System.out.println("buffer '" + bufferNumber + "',  retrieved dataString : " + dataString);
-//				sender.write(dataString+"\n");
-//				sender.flush();
+//				System.out.println("buffer '" + bufferNumber + "',  retrieved dataString : " + dataString);
+				sender.write(dataString+"\n");
+				sender.flush();
 			}
 			
 		} catch (IOException e) {

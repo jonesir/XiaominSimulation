@@ -21,6 +21,7 @@ public class Packet {
 
 	public Packet() {
 		this.blocks = new ArrayList<Block>();
+		this.ID = generatePackageID();
 	}
 
 	public void addBlock(Block block) {
@@ -70,7 +71,7 @@ public class Packet {
 	}
 
 	public long generatePackageID() {
-
+//		System.out.println("IDGen = " + IDGen);
 		if (IDGen >= (2 << (IDLength - 1))) {
 			IDGen = 0;
 		}

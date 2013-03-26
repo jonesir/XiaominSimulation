@@ -25,9 +25,9 @@ public class ClientLauncher {
 																					// destination
 
 	private static final boolean dataIsEncoded = true; // decide whether to be tranfered data is encoded or not
-	private static final int linkCount = 4; // number of links through which
+	public static final int linkCount = 4; // number of links through which
 											// data will be sent
-	private static final int blockCount = 60; // number of total blocks need
+	public static final int blockCount = 100; // number of total blocks need
 												// to be generated and sent
 	// initialize 4 linked blocking queue as 4 links
 	public static LinkedBlockingQueue<String> buffer1 = new LinkedBlockingQueue<String>();
@@ -58,22 +58,22 @@ public class ClientLauncher {
 				case 0:
 					// System.out.println("switch 0");
 					ClientLauncher.buffer1.add(dataBlock.toBinaryString());
-					System.out.println("Buffer Size 1 : " + ClientLauncher.buffer1.size());
+//					System.out.println("Buffer Size 1 : " + ClientLauncher.buffer1.size());
 					break;
 				case 1:
 					// System.out.println("switch 1");
 					ClientLauncher.buffer2.add(dataBlock.toBinaryString());
-					System.out.println("Buffer Size 2 : " + ClientLauncher.buffer2.size());
+//					System.out.println("Buffer Size 2 : " + ClientLauncher.buffer2.size());
 					break;
 				case 2:
 					// System.out.println("switch 2");
 					ClientLauncher.buffer3.add(dataBlock.toBinaryString());
-					System.out.println("Buffer Size 3 : " + ClientLauncher.buffer3.size());
+//					System.out.println("Buffer Size 3 : " + ClientLauncher.buffer3.size());
 					break;
 				case 3:
 					// System.out.println("switch 3");
 					ClientLauncher.buffer4.add(dataBlock.toBinaryString());
-					System.out.println("Buffer Size 4 : " + ClientLauncher.buffer4.size());
+//					System.out.println("Buffer Size 4 : " + ClientLauncher.buffer4.size());
 					break;
 				default:
 					break;
@@ -81,8 +81,8 @@ public class ClientLauncher {
 				/* Scenario with coding */
 			} else {
 				Packet dataPacket = new Packet();
-				for(int j = 0 ; j < Packet.size ; i++){
-					dataPacket.addBlock(new Block(0, null));
+				for(int j = 0 ; j < Packet.size ; j++){
+					dataPacket.addBlock(new Block(0, dataPacket));
 				}
 				
 				// get the id of the block and assign the block to corresponding link
@@ -90,24 +90,24 @@ public class ClientLauncher {
 				// modulo 4
 				switch ((int) dataPacket.getPacketID() % ClientLauncher.linkCount) {
 				case 0:
-					// System.out.println("switch 0");
+//					 System.out.println("switch 0");
 					ClientLauncher.buffer1.add(dataPacket.toBinaryString());
-					System.out.println("Buffer Size 1 : " + ClientLauncher.buffer1.size());
+//					System.out.println("Buffer Size 1 : " + ClientLauncher.buffer1.size());
 					break;
 				case 1:
-					// System.out.println("switch 1");
+//					 System.out.println("switch 1");
 					ClientLauncher.buffer2.add(dataPacket.toBinaryString());
-					System.out.println("Buffer Size 2 : " + ClientLauncher.buffer2.size());
+//					System.out.println("Buffer Size 2 : " + ClientLauncher.buffer2.size());
 					break;
 				case 2:
-					// System.out.println("switch 2");
+//					 System.out.println("switch 2");
 					ClientLauncher.buffer3.add(dataPacket.toBinaryString());
-					System.out.println("Buffer Size 3 : " + ClientLauncher.buffer3.size());
+//					System.out.println("Buffer Size 3 : " + ClientLauncher.buffer3.size());
 					break;
 				case 3:
-					// System.out.println("switch 3");
+//					 System.out.println("switch 3");
 					ClientLauncher.buffer4.add(dataPacket.toBinaryString());
-					System.out.println("Buffer Size 4 : " + ClientLauncher.buffer4.size());
+//					System.out.println("Buffer Size 4 : " + ClientLauncher.buffer4.size());
 					break;
 				default:
 					break;
