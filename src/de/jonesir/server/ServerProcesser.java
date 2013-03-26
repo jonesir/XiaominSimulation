@@ -85,10 +85,10 @@ public class ServerProcesser extends Thread {
 		synchronized (Server.SHARED_BUFFER) {
 			log("insertIntoBuffer");
 			if (Server.SHARED_BUFFER.size() <= Server.bufferSize){
-				log("insertIntoBuffer : if");
+//				log("insertIntoBuffer : if");
 				Server.SHARED_BUFFER.add(dataString);
 			} else {
-				log("insertIntoBuffer : else");
+//				log("insertIntoBuffer : else");
 				Server.packetLost++;
 				System.out.println("number of packet lost : " + Server.packetLost);
 			}

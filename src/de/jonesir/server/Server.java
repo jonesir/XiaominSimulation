@@ -27,6 +27,6 @@ public class Server {
 		new ServerProcesser(port3).start();
 		new ServerProcesser(port4).start();
 		// buffer emptier remove the data from shared buffer if complete data has been received
-//		new BufferEmptier().start();
+		new BufferEmptier().start();
 	}
 }
