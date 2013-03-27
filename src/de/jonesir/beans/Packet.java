@@ -2,6 +2,13 @@ package de.jonesir.beans;
 
 import java.util.ArrayList;
 
+import de.jonesir.algo.UniversalFunctions;
+
+/**
+ * 
+ * @author Yuesheng Zhong
+ *
+ */
 public class Packet {
 
 	/**
@@ -12,7 +19,7 @@ public class Packet {
 
 	private ArrayList<Block> blocks = null;
 	private long ID;
-	private static final int IDLength = 6;
+	private static final int IDLength = 8;
 	public static final int size = 1;
 	public static final int lengthWithouIdentifier = Packet.size * Block.lengthWithoutIdentifier;
 	public static final int length = Packet.lengthWithouIdentifier + Packet.IDLength;
@@ -49,23 +56,7 @@ public class Packet {
 		for (Block block : this.blocks) {
 			binaryString += block.toBinaryStringWithoutIdentifier();
 		}
-		binaryString += formatBinaryString(Long.toBinaryString(this.ID), Packet.IDLength);
-
-		return binaryString;
-	}
-
-	public static String formatBinaryString(String binaryString, int length) {
-		if (binaryString.length() == length)
-			return binaryString;
-		else if (binaryString.length() < length) {
-			int difference = length - binaryString.length();
-			for (int i = 0; i < difference; i++) {
-				binaryString = "0" + binaryString;
-			}
-		} else if (binaryString.length() > length) {
-			System.out.println("Wrong binary format, it is too long!");
-			System.exit(0);
-		}
+		binaryString += UniversalFunctions.formatBinaryString(Long.toBinaryString(this.ID), Packet.IDLength);
 
 		return binaryString;
 	}

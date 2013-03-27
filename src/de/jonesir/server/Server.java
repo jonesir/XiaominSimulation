@@ -22,11 +22,11 @@ public class Server {
 
 	public static void main(String[] args) {
 		// four thread which generate server socket listening on different ports for different links
-		new ServerProcesser(port1).start();
-		new ServerProcesser(port2).start();
-		new ServerProcesser(port3).start();
-		new ServerProcesser(port4).start();
+		new Thread(new ServerProcesser(port1)).start();
+		new Thread(new ServerProcesser(port2)).start();
+		new Thread(new ServerProcesser(port3)).start();
+		new Thread(new ServerProcesser(port4)).start();
 		// buffer emptier remove the data from shared buffer if complete data has been received
-		new BufferEmptier().start();
+		new Thread(new BufferEmptier()).start();
 	}
 }

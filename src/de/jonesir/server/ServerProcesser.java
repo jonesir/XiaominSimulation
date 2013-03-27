@@ -12,7 +12,7 @@ import java.net.Socket;
  * @author Yuesheng Zhong
  * 
  */
-public class ServerProcesser extends Thread {
+public class ServerProcesser implements Runnable {
 
 	int port; // port number that this thread listen on
 	private static int dataCount1 = 0, dataCount2 = 0, dataCount3 = 0, dataCount4 = 0;
@@ -85,10 +85,11 @@ public class ServerProcesser extends Thread {
 		synchronized (Server.SHARED_BUFFER) {
 			log("insertIntoBuffer");
 			if (Server.SHARED_BUFFER.size() <= Server.bufferSize){
-//				log("insertIntoBuffer : if");
+				log("insertIntoBuffer : if");
+				
 				Server.SHARED_BUFFER.add(dataString);
 			} else {
-//				log("insertIntoBuffer : else");
+				log("insertIntoBuffer : else");
 				Server.packetLost++;
 				System.out.println("number of packet lost : " + Server.packetLost);
 			}

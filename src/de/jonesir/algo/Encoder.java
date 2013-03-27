@@ -1,98 +1,172 @@
 package de.jonesir.algo;
 
-import java.util.ArrayList;
-
-import de.jonesir.beans.Block;
-import de.jonesir.beans.Generation;
-import de.jonesir.beans.Packet;
 import de.jonesir.client.ClientLauncher;
 
+/**
+ * @author Yuesheng Zhong
+ *
+ */
 public class Encoder {
 
-    private static final int GALOIS_FIELD_SIZE = 8;
-    private static final int GALOIS_FIELD_MATRIX_SIZE = 4;
+	private static final int[][] GALOIS_FIELD = {{198,79,203,136}, {125,130,165,90},{112,131,97,240},{114,209,207,224}};
+	private static final int[][] INVERSE_GALOIS_FIELD = {{213,164,107,249},{146,34,216,159},{139,80,66,139},{112,95,229,56}};
 
-    private static final GaloisField[][] galoisField = GaloisField.generateGaloisFieldMatrix(GALOIS_FIELD_MATRIX_SIZE, GALOIS_FIELD_SIZE);
+	private static final int BYTE_LENGTH = 8;
 
-    private static final int BYTE_LENGTH = 8;
-
-    public static void main(String[] args) {
-	System.out.println(new String[] { "8781", "asdf", "38klsdf-" }.toString());
-    }
-
-    /**
-     * @param encodeString
-     * @return
-     */
-    public static String[] encode(String[] encodeString) {
-
-	int length = encodeString[0].length() / BYTE_LENGTH;
-	String[][] matrix = new String[ClientLauncher.linkCount][length];
-
-	for (int i = 0; i < length; i++) {
-	    for (int j = 0; j < matrix.length; j++) {
-		matrix[j][i] = encodeString[j].substring(i * BYTE_LENGTH, (i + 1) * BYTE_LENGTH);
-	    }
+	public static void main(String[] args) {
+		String resultGF = "";
+		String resultIGF = "";
+		for(int i = 0 ; i < 4 ; i++){
+			for(int j = 0 ; j < 4 ; j++){
+				resultGF += GALOIS_FIELD[i][j] + "\t";
+				resultIGF += INVERSE_GALOIS_FIELD[i][j] + "\t";
+				if(j==3){
+					resultGF +="\n";
+					resultIGF += "\n";
+				}
+			}
+		}
+		System.out.println("Result of GF : \n" + resultGF );
+		System.out.println("Result of Inverse GF : \n" + resultIGF );
 	}
 
-	// the output array of string
-	String[] output = new String[ClientLauncher.linkCount];
+	/**
+	 * @param encodeString
+	 * @return
+	 */
+	public static String[] encode(String[] encodeString) {
 
-	// row of galois field , or link number
-	for (int rowOfGaloisField = 0; rowOfGaloisField < ClientLauncher.linkCount; rowOfGaloisField++) {
-	    // length of bytes that needs to be encoded, or how many times of * and + need to be carried out
-	    String ysOfOneLink = "";
-	    for (int dataByteIndex = 0; dataByteIndex < length; dataByteIndex++) {
-		// number of multiply
-		String[] yValues = new String[ClientLauncher.linkCount];
-		for (int galoisColumn = 0; galoisColumn < ClientLauncher.linkCount; galoisColumn++) {
-		    yValues[galoisColumn] = computeYValue(galoisField[rowOfGaloisField][galoisColumn], matrix[galoisColumn][dataByteIndex]);
+		int length = encodeString[0].length() / BYTE_LENGTH;
+		// 2 dimensional int array to store decimal version of the binary value
+		int[][] matrix = new int[ClientLauncher.linkCount][length];
+
+		// cut the incoming to be encoded binary value into Bytes and transfer each Byte to decimal value in GF(2^8)
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				matrix[j][i] = Integer.parseInt(encodeString[j].substring(i * BYTE_LENGTH, (i + 1) * BYTE_LENGTH));
+			}
 		}
 
-		ysOfOneLink += computeYWithAddtion(yValues);
-	    }
-	    output[rowOfGaloisField] = ysOfOneLink.toString();
-	}
-	return output;
-    }
+		// the output array of string in form of binary value that can directly be sent out to each link
+		String[] output = new String[ClientLauncher.linkCount];
 
-    /**
-     * @param yValues
-     * @return
-     */
-    private static String computeYWithAddtion(String[] yValues) {
-	String yValue = "";
-	// iterate through each position of the y string
-	for (int i = 0; i < yValues[0].length(); i++){
-	    int temp = 0 ;
-	    // check the same position of each y string and use xor to get the answer
-	    for (String y : yValues) {
-		temp += (y.charAt(i)=='0')?0:1;
-	    }
-	    yValue += temp%2;
-	}
-	return yValue;
-    }
+		// row of galois field , or link number, in this case 4
+		for (int rowOfGaloisField = 0; rowOfGaloisField < ClientLauncher.linkCount; rowOfGaloisField++) {
+			// length of bytes that needs to be encoded, or how many times of * and + need to be carried out
+			String ysOfOneLink = "";
+			for (int dataByteIndex = 0; dataByteIndex < length; dataByteIndex++) {
+				// number of multiply, in this case 4
+				int byteEncodeResult = 0;
+				for (int galoisColumn = 0; galoisColumn < ClientLauncher.linkCount; galoisColumn++) {
+					byteEncodeResult = GALOIS_FIELD[rowOfGaloisField][galoisColumn] * matrix[galoisColumn][dataByteIndex];
+				}
+				// after multiply of each row and column, store the result as binary string
+				ysOfOneLink += UniversalFunctions.formatBinaryString(Integer.toBinaryString(byteEncodeResult%(2<<7)), BYTE_LENGTH);
+			}
+			// store complete binary string of encoded value for each link
+			output[rowOfGaloisField] = ysOfOneLink;
+		}
 
-    /**
-     * @param gValue
-     * @param xValue
-     * @return yValue of one column
-     */
-    private static String computeYValue(GaloisField gValue, String xValue) {
-	String yValue = "";
-	String[] gStrings = gValue.gf;
-	for (String g : gStrings) {
-	    int temp = 0;
-	    for (int i = 0; i < g.length(); i++) {
-		temp += (g.charAt(i) == xValue.charAt(i)) ? 0 : 1;
-	    }
-	    yValue += temp % 2;
+		return output;
 	}
-	return yValue;
-    }
+	
+	/**
+	 * @param encodeString
+	 * @return
+	 */
+	public static String[] encode_apache(String[] encodeString) {
 
-    private static void cout(String coutString) {
-	System.out.println(coutString);
-    }
+		int length = encodeString[0].length() / BYTE_LENGTH;
+		// 2 dimensional int array to store decimal version of the binary value
+		int[][] matrix = new int[ClientLauncher.linkCount][length];
+		
+		// Save only identifier of each packet so that only content will be encoded
+		String[] identifiers = new String[ClientLauncher.linkCount];
+		for(int i = 0 ; i < ClientLauncher.linkCount ; i++){
+			identifiers[i] = encodeString[i].substring((length-1)*BYTE_LENGTH);
+		}
+		// cut the incoming to be encoded binary value into Bytes and transfer each Byte to decimal value in GF(2^8)
+		for (int i = 0; i < length-1; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				matrix[j][i] = Integer.parseInt(encodeString[j].substring(i * BYTE_LENGTH, (i + 1) * BYTE_LENGTH));
+			}
+		}
+
+		// the output array of string in form of binary value that can directly be sent out to each link
+		String[] output = new String[ClientLauncher.linkCount];
+		
+		// init GaloisField class
+		GaloisField gf = GaloisField.getInstance();
+		
+		// row of galois field , or link number, in this case 4
+		for (int rowOfGaloisField = 0; rowOfGaloisField < ClientLauncher.linkCount; rowOfGaloisField++) {
+			// length of bytes that needs to be encoded, or how many times of * and + need to be carried out
+			String ysOfOneLink = "";
+			for (int dataByteIndex = 0; dataByteIndex < length; dataByteIndex++) {
+				// number of multiply, in this case 4
+				int byteEncodeResult = 0;
+				for (int galoisColumn = 0; galoisColumn < ClientLauncher.linkCount; galoisColumn++) {
+					byteEncodeResult = gf.add(byteEncodeResult, gf.multiply(GALOIS_FIELD[rowOfGaloisField][galoisColumn],matrix[galoisColumn][dataByteIndex]));
+				}
+				// after multiply of each row and column, store the result as binary string
+				ysOfOneLink += UniversalFunctions.formatBinaryString(Integer.toBinaryString(byteEncodeResult), BYTE_LENGTH);
+			}
+			// store complete binary string of encoded value AND append corresponding identifier to the end for each link
+			output[rowOfGaloisField] = ysOfOneLink + identifiers[rowOfGaloisField];
+		}
+
+		return output;
+	}
+
+	/**
+	 * @param encodeString
+	 * @return
+	 */
+	public static String[] decode_apache(String[] encodeString) {
+
+		int length = encodeString[0].length() / BYTE_LENGTH;
+		// 2 dimensional int array to store decimal version of the binary value
+		int[][] matrix = new int[ClientLauncher.linkCount][length];
+		
+		// Save only identifier of each packet so that only content will be encoded
+		String[] identifiers = new String[ClientLauncher.linkCount];
+		for(int i = 0 ; i < ClientLauncher.linkCount ; i++){
+			identifiers[i] = encodeString[i].substring((length-1)*BYTE_LENGTH);
+		}
+		// cut the incoming to be encoded binary value into Bytes and transfer each Byte to decimal value in GF(2^8)
+		for (int i = 0; i < length-1; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				matrix[j][i] = Integer.parseInt(encodeString[j].substring(i * BYTE_LENGTH, (i + 1) * BYTE_LENGTH));
+			}
+		}
+
+		// the output array of string in form of binary value that can directly be sent out to each link
+		String[] output = new String[ClientLauncher.linkCount];
+		
+		// init GaloisField class
+		GaloisField gf = GaloisField.getInstance();
+		
+		// row of galois field , or link number, in this case 4
+		for (int rowOfGaloisField = 0; rowOfGaloisField < ClientLauncher.linkCount; rowOfGaloisField++) {
+			// length of bytes that needs to be encoded, or how many times of * and + need to be carried out
+			String ysOfOneLink = "";
+			for (int dataByteIndex = 0; dataByteIndex < length; dataByteIndex++) {
+				// number of multiply, in this case 4
+				int byteEncodeResult = 0;
+				for (int galoisColumn = 0; galoisColumn < ClientLauncher.linkCount; galoisColumn++) {
+					byteEncodeResult = gf.add(byteEncodeResult, gf.multiply(INVERSE_GALOIS_FIELD[rowOfGaloisField][galoisColumn],matrix[galoisColumn][dataByteIndex]));
+				}
+				// after multiply of each row and column, store the result as binary string
+				ysOfOneLink += UniversalFunctions.formatBinaryString(Integer.toBinaryString(byteEncodeResult), BYTE_LENGTH);
+			}
+			// store complete binary string of encoded value AND append corresponding identifier to the end for each link
+			output[rowOfGaloisField] = ysOfOneLink + identifiers[rowOfGaloisField];
+		}
+
+		return output;
+	}
+	
+	private static void cout(String coutString) {
+		System.out.println("Encoder ::: " + coutString);
+	}
 }

@@ -18,7 +18,7 @@ public class Logger {
 	int gfSize = 2 << (elementSize - 1);
 	String[] gfStrings = new String[gfSize];
 	for (int i = 0; i < gfSize; i++) {
-	    gfStrings[i] = GaloisField.formatBinaryString(Integer.toBinaryString(i), elementSize);
+	    gfStrings[i] = JonesirGaloisField.formatBinaryString(Integer.toBinaryString(i), elementSize);
 	}
 
 	try {

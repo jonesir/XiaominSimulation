@@ -1,10 +1,17 @@
 package de.jonesir.beans;
 
+import de.jonesir.algo.UniversalFunctions;
+import de.jonesir.client.ClientLauncher;
+
+/**
+ * @author Yuesheng Zhong
+ *
+ */
 public class Block {
 
 	// basic general information of blocks
-	public static final int lengthWithoutIdentifier = 66;
-	public static final int IDLength = 6;
+	public static final int lengthWithoutIdentifier = 64;
+	public static final int IDLength = 8;
 	public static final int length = Block.lengthWithoutIdentifier + Block.IDLength;
 	private static long IDGen = 0;
 	public static int routeNr = 4;
@@ -16,7 +23,7 @@ public class Block {
 
 	public static void main(String[] args) {
 	    
-	    System.out.println("" + (2<<IDLength));
+	    System.out.println("" + ClientLauncher.random.nextInt(2<<7));
 	}
 
 	public Block(long blockContent, Packet belongingPackage) {
@@ -39,11 +46,11 @@ public class Block {
 	}
 
 	public String toBinaryString() {
-		return Packet.formatBinaryString(Long.toBinaryString(this.blockContent), lengthWithoutIdentifier) + Packet.formatBinaryString(Long.toBinaryString(ID), IDLength);
+		return UniversalFunctions.formatBinaryString(Long.toBinaryString(this.blockContent), lengthWithoutIdentifier) + UniversalFunctions.formatBinaryString(Long.toBinaryString(ID), IDLength);
 	}
 	
 	public String toBinaryStringWithoutIdentifier(){
-		return Packet.formatBinaryString(Long.toBinaryString(this.blockContent), lengthWithoutIdentifier);
+		return UniversalFunctions.formatBinaryString(Long.toBinaryString(this.blockContent), lengthWithoutIdentifier);
 	}
 
 	public long generateBlockID() {
