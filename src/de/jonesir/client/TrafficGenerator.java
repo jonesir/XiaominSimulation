@@ -64,6 +64,19 @@ public class TrafficGenerator extends Thread {
 			while (true) {
 				dataString = buffer.take();
 //				System.out.println("buffer '" + bufferNumber + "',  retrieved dataString : " + dataString);
+				if(port==Server.port1){
+				    Thread.sleep(100);
+				}
+				if(port==Server.port2){
+				    Thread.sleep(200);
+				}
+				if(port==Server.port3){
+				    Thread.sleep(40);
+				}
+				if(port==Server.port4){
+				    Thread.sleep(10);
+				}
+				
 				sender.write(dataString+"\n");
 				sender.flush();
 			}

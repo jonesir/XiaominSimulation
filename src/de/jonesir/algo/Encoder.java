@@ -1,5 +1,7 @@
 package de.jonesir.algo;
 
+import java.util.LinkedList;
+
 import de.jonesir.client.ClientLauncher;
 
 /**
@@ -11,23 +13,27 @@ public class Encoder {
 	private static final int[][] GALOIS_FIELD = {{198,79,203,136}, {125,130,165,90},{112,131,97,240},{114,209,207,224}};
 	private static final int[][] INVERSE_GALOIS_FIELD = {{213,164,107,249},{146,34,216,159},{139,80,66,139},{112,95,229,56}};
 
-	private static final int BYTE_LENGTH = 8;
+	public static final int BYTE_LENGTH = 8;
 
 	public static void main(String[] args) {
-		String resultGF = "";
-		String resultIGF = "";
-		for(int i = 0 ; i < 4 ; i++){
-			for(int j = 0 ; j < 4 ; j++){
-				resultGF += GALOIS_FIELD[i][j] + "\t";
-				resultIGF += INVERSE_GALOIS_FIELD[i][j] + "\t";
-				if(j==3){
-					resultGF +="\n";
-					resultIGF += "\n";
-				}
-			}
-		}
-		System.out.println("Result of GF : \n" + resultGF );
-		System.out.println("Result of Inverse GF : \n" + resultIGF );
+//		String resultGF = "";
+//		String resultIGF = "";
+//		for(int i = 0 ; i < 4 ; i++){
+//			for(int j = 0 ; j < 4 ; j++){
+//				resultGF += GALOIS_FIELD[i][j] + "\t";
+//				resultIGF += INVERSE_GALOIS_FIELD[i][j] + "\t";
+//				if(j==3){
+//					resultGF +="\n";
+//					resultIGF += "\n";
+//				}
+//			}
+//		}
+//		System.out.println("Result of GF : \n" + resultGF );
+//		System.out.println("Result of Inverse GF : \n" + resultIGF );
+	  System.out.println(""+13/4);
+	  System.out.println(""+12/4);
+	  System.out.println(""+14/4);
+	  System.out.println(""+15/4);
 	}
 
 	/**
