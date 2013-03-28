@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import de.jonesir.algo.GlobalConfig;
 import de.jonesir.algo.Logger;
 import de.jonesir.client.ClientLauncher;
 
@@ -26,24 +27,34 @@ public class Terminator implements Runnable {
 			Socket s = ss.accept();
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			while (true)
-				if (reader.readLine().equals("terminate")) {
-					System.out.println("Simulation terminates!!!");
+			String readString;
+			while ((readString = reader.readLine())!=null){
+			    	
+				if (readString.equals("terminate")) {
+					System.out.println("Simulation " + GlobalConfig.paramCombinationCounter + " terminates");
 					
-					// terminate all the threads
-					for(Thread t : threads){
-						t.stop();
-					}
-					
+					// set the time stamp of ending processing the SHARED_BUFFER
+					GlobalConfig.end = System.nanoTime();
 					// log the result
 					Logger.logResult();
-					
-					// terminate the simulation
-					System.exit(0);
+
+					// refresh parameters and reset variables
+					Server.refreshParams();
+					Server.resetParams();
+				} 
+				if (readString.equals("completeTerminate")){
+				    for(Thread t : threads){
+					t.stop();
+				    }
+				    Thread.sleep(3000);
+				    System.exit(0);
 				}
 
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
 		}
 	}
 

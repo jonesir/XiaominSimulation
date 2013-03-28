@@ -1,48 +1,332 @@
 Encoding : NO 
 Delay Setting in miliseconds : 500, 300, 400, 600
 Sending Tempo Setting in miliseconds : 100, 100, 100, 100
-Total Packets Sent : 1000
-Packets Lost       : 209
-Packet Lost Ratio  : 20.9%
+Total Packets Sent : 8000
+Packets Lost       : 5099
+Packet Lost Ratio  : 63.7375%
 -----------------------------
 
 Encoding : NO 
 Delay Setting in miliseconds : 500, 300, 400, 600
-Sending Tempo Setting in miliseconds : 100, 100, 100, 100
-Total Packets Sent : 1000
-Packets Lost       : 11
-Packet Lost Ratio  : 1.1%
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
+Packets Lost       : 36807
+Packet Lost Ratio  : 18.4035%
+Total Time Used(ns): 15843973141
+Throughput         : 2453.8 Packets per Second
 -----------------------------
 
 Encoding : NO 
 Delay Setting in miliseconds : 500, 300, 400, 600
-Sending Tempo Setting in miliseconds : 100, 100, 100, 100
-Total Packets Sent : 1000
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
+Packets Lost       : 36747
+Packet Lost Ratio  : 18.3735%
+Total Time Used(ns): 15878003753
+Throughput         : 2449.8 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 2500
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
+Packets Lost       : 36830
+Packet Lost Ratio  : 18.415%
+Total Time Used(ns): 15786132115
+Throughput         : 2455.3333333333335 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
+Packets Lost       : 36873
+Packet Lost Ratio  : 18.4365%
+Total Time Used(ns): 15842479022
+Throughput         : 2458.2 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 10000
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
+Packets Lost       : 36846
+Packet Lost Ratio  : 18.423%
+Total Time Used(ns): 15774532695
+Throughput         : 2456.4 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 10000
+Total Packets Sent : 200000
+Buffer Size in Byte: 18000
+Packets Lost       : 36233
+Packet Lost Ratio  : 18.1165%
+Total Time Used(ns): 15783318601
+Throughput         : 2415.5333333333333 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 18000
+Packets Lost       : 36236
+Packet Lost Ratio  : 18.118%
+Total Time Used(ns): 15857140350
+Throughput         : 2415.733333333333 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 2500
+Total Packets Sent : 200000
+Buffer Size in Byte: 18000
+Packets Lost       : 36015
+Packet Lost Ratio  : 18.0075%
+Total Time Used(ns): 15855700236
+Throughput         : 2401.0 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 18000
+Packets Lost       : 36328
+Packet Lost Ratio  : 18.164%
+Total Time Used(ns): 15774095019
+Throughput         : 2421.866666666667 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35491
+Packet Lost Ratio  : 17.7455%
+Total Time Used(ns): 15841575064
+Throughput         : 2366.0666666666666 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 2500
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35615
+Packet Lost Ratio  : 17.8075%
+Total Time Used(ns): 15748916707
+Throughput         : 2374.3333333333335 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35458
+Packet Lost Ratio  : 17.729%
+Total Time Used(ns): 15814357441
+Throughput         : 2363.866666666667 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 10000
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35380
+Packet Lost Ratio  : 17.69%
+Total Time Used(ns): 15837575413
+Throughput         : 2358.6666666666665 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35585
+Packet Lost Ratio  : 17.7925%
+Total Time Used(ns): 15865576304
+Throughput         : 2372.3333333333335 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 2500
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35596
+Packet Lost Ratio  : 17.798%
+Total Time Used(ns): 15773513356
+Throughput         : 2373.0666666666666 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35471
+Packet Lost Ratio  : 17.7355%
+Total Time Used(ns): 15807528794
+Throughput         : 2364.733333333333 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 2500
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35481
+Packet Lost Ratio  : 17.7405%
+Total Time Used(ns): 15766787914
+Throughput         : 2365.4 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35520
+Packet Lost Ratio  : 17.76%
+Total Time Used(ns): 15862832789
+Throughput         : 2368.0 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 10000
+Total Packets Sent : 200000
+Buffer Size in Byte: 27000
+Packets Lost       : 35459
+Packet Lost Ratio  : 17.7295%
+Total Time Used(ns): 15825978528
+Throughput         : 2363.9333333333334 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 10000
+Total Packets Sent : 200000
+Buffer Size in Byte: 36000
+Packets Lost       : 34356
+Packet Lost Ratio  : 17.178%
+Total Time Used(ns): 15664308199
+Throughput         : 2290.4 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 36000
+Packets Lost       : 34432
+Packet Lost Ratio  : 17.216%
+Total Time Used(ns): 15811465561
+Throughput         : 2295.4666666666667 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 2500
+Total Packets Sent : 200000
+Buffer Size in Byte: 36000
+Packets Lost       : 34526
+Packet Lost Ratio  : 17.263%
+Total Time Used(ns): 15796985199
+Throughput         : 2301.733333333333 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 45000
+Packets Lost       : 33582
+Packet Lost Ratio  : 16.791%
+Total Time Used(ns): 15668915061
+Throughput         : 2238.8 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 2500
+Total Packets Sent : 200000
+Buffer Size in Byte: 45000
+Packets Lost       : 33515
+Packet Lost Ratio  : 16.7575%
+Total Time Used(ns): 15831810227
+Throughput         : 2234.3333333333335 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 45000
+Packets Lost       : 1682
+Packet Lost Ratio  : 0.841%
+Total Time Used(ns): 17072217670
+Throughput         : 98.94117647058823 Packets per Second
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 5000
+Total Packets Sent : 200000
+Buffer Size in Byte: 45000
+Packets Lost       : 33460
+Packet Lost Ratio  : 16.73%
+Total Time Used(ns): 15782329762
+Throughput         : 2230.6666666666665 Packets per Second
+-----------------------------
+
+==================================
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
 Packets Lost       : 0
 Packet Lost Ratio  : 0.0%
+Total Time Used(ns): 63403040848767
+Throughput         : 3.154424869485671 Packets per Second
 -----------------------------
 
 Encoding : NO 
 Delay Setting in miliseconds : 500, 300, 400, 600
-Sending Tempo Setting in miliseconds : 100, 100, 100, 100
-Total Packets Sent : 1000
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
 Packets Lost       : 0
 Packet Lost Ratio  : 0.0%
+Total Time Used(ns): 63930974555791
+Throughput         : 3.128421711246676 Packets per Second
 -----------------------------
+
+****************************************************************************************************************
+****************************************************************************************************************
+
 
 Encoding : NO 
 Delay Setting in miliseconds : 500, 300, 400, 600
-Sending Tempo Setting in miliseconds : 100, 100, 100, 100
-Total Packets Sent : 1000
-Packets Lost       : 115
-Packet Lost Ratio  : 11.5%
------------------------------
-
-Encoding : NO 
-Delay Setting in miliseconds : 500, 300, 400, 600
-Sending Tempo Setting in miliseconds : 100, 100, 100, 100
-Total Packets Sent : 1000
-Packets Lost       : 162
-Packet Lost Ratio  : 16.2%
+Sending Tempo Setting in nanoseconds : 1000
+Total Packets Sent : 200000
+Buffer Size in Byte: 9000
+Packets Lost       : 54630
+Packet Lost Ratio  : 27.315%
+Total Time Used(ns): 15830688897
+Throughput         : 9691.333333333334 Packets per Second
 -----------------------------
 

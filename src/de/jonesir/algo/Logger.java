@@ -3,10 +3,8 @@ package de.jonesir.algo;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
 
-import de.jonesir.client.ClientLauncher;
+import de.jonesir.beans.Packet;
 import de.jonesir.client.TrafficGenerator;
 import de.jonesir.server.Server;
 
@@ -24,20 +22,23 @@ public class Logger {
 	@SuppressWarnings("resource")
 	public static void logResult() {
 		String writerString = "";
-		if (ClientLauncher.dataIsEncoded) {
+		if (GlobalConfig.dataIsEncoded) {
 			writerString += "Encoding : YES \n";
 		} else {
 			writerString += "Encoding : NO \n";
 		}
-		writerString += "Delay Setting in miliseconds : " + TrafficGenerator.delay1 + ", " + TrafficGenerator.delay2 + ", " + TrafficGenerator.delay3 + ", " + TrafficGenerator.delay4 + "\n";
-		writerString += "Sending Tempo Setting in miliseconds : " + TrafficGenerator.tempo1 + ", " + TrafficGenerator.tempo2 + ", " + TrafficGenerator.tempo3 + ", " + TrafficGenerator.tempo4 + "\n";
-		writerString += "Total Packets Sent : " + ClientLauncher.blockCount + "\n";
+		writerString += "Delay Setting in miliseconds : " + GlobalConfig.delay1 + ", " + GlobalConfig.delay2 + ", " + GlobalConfig.delay3 + ", " + GlobalConfig.delay4 + "\n";
+		writerString += "Sending Tempo Setting in nanoseconds : " + GlobalConfig.tempoN1 + "\n";
+		writerString += "Total Packets Sent : " + GlobalConfig.amount_of_packets + "\n";
+		writerString += "Buffer Size in Byte: " + GlobalConfig.MAX_SHARED_BUFFER_SIZE*(Packet.length/Encoder.BYTE_LENGTH) + "\n";
 		writerString += "Packets Lost       : " + Server.NUMBER_OF_LOST_PACKETS + "\n";
-		writerString += "Packet Lost Ratio  : " + 100 * ((double) Server.NUMBER_OF_LOST_PACKETS) / ClientLauncher.blockCount + "%\n";
+		writerString += "Packet Lost Ratio  : " + 100 * ((double) Server.NUMBER_OF_LOST_PACKETS) / GlobalConfig.amount_of_packets + "%\n";
+		writerString += "Total Time Used(ns): " + (GlobalConfig.end-GlobalConfig.begin) + "\n";
+		writerString += "Throughput         : " + (double)(GlobalConfig.amount_of_packets-Server.NUMBER_OF_LOST_PACKETS)/((GlobalConfig.end-GlobalConfig.begin)/(1000000000)) + " Packets per Second\n";
 		writerString += "-----------------------------\n\n";
 		try {
 			BufferedWriter writer;
-			if (ClientLauncher.dataIsEncoded)
+			if (GlobalConfig.dataIsEncoded)
 				writer = new BufferedWriter(new FileWriter(result_encode, true));
 			else
 				writer = new BufferedWriter(new FileWriter(result_multipath, true));
@@ -49,6 +50,9 @@ public class Logger {
 
 	}
 
+	public static void main(String[] args){
+	    System.out.println(1.0e9);
+	}
 	// public static void generateGaloisFieldMatrix(int matrixSize, int elementSize) {
 	// int gfSize = 2 << (elementSize - 1);
 	// String[] gfStrings = new String[gfSize];

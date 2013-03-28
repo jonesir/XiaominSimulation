@@ -68,4 +68,8 @@ public class Packet {
 		}
 		return IDGen++;
 	}
+	
+	public static void resetID(){
+	    IDGen=0;
+	}
 }

@@ -59,4 +59,8 @@ public class Block {
 	    }
 	    return IDGen++;
 	}
+	
+	public static void resetID(){
+	    IDGen=0;
+	}
 }
