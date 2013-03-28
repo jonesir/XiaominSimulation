@@ -23,20 +23,21 @@ public class Transporter implements Runnable{
 	String temp = "";
 	
 	
-	while(true){
-	    try {
-		temp = Server.TEMP_QUEUE.take();
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-	    }
-	    log("SHARED_BUFFER_SIZE : " + Server.SHARED_BUFFER.size());
-	    if(Server.SHARED_BUFFER.size()>=Server.bufferSize){
-//		log("Lost : " +Server.packetLost++);
-	    }else{
-//		log("id before added to shared buffer:" + Integer.parseInt(temp.substring(64), 2));
-		Server.SHARED_BUFFER.add(temp);
-	    }
-	}
+//	while(true){
+//	    try {
+//		temp = Server.TEMP_QUEUE.take();
+//	    } catch (InterruptedException e) {
+//		e.printStackTrace();
+//	    }
+//	    log("SHARED_BUFFER_SIZE : " + Server.SHARED_BUFFER.size());
+//	    if(Server.SHARED_BUFFER.size()>=Server.MAX_SHARED_BUFFER_SIZE){
+////		log("Lost : " +Server.packetLost++);
+//	    }else{
+////		log("id before added to shared buffer:" + Integer.parseInt(temp.substring(64), 2));
+//		Server.SHARED_BUFFER.add(temp);
+//	    }
+//	}
+//    }
     }
 
     private void log(String logString){

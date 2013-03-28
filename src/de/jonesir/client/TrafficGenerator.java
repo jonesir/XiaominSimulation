@@ -60,37 +60,12 @@ public class TrafficGenerator extends Thread {
 			Socket s = new Socket(address, port);
 			BufferedWriter sender = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			
-			
-			// Delay
-//			if(port==Server.port1){
-//			    Thread.sleep(100);// delay
-//			}
-//			if(port==Server.port2){
-//			    Thread.sleep(200);
-//			}
-//			if(port==Server.port3){
-//			    Thread.sleep(40);
-//			}
-//			if(port==Server.port4){
-//			    Thread.sleep(10);
-//			}
 			while (true) {
 				dataString = buffer.take();
-//				System.out.println("buffer '" + bufferNumber + "',  retrieved dataString : " + dataString);
-				// sending speed
-//				if(port==Server.port1){
-//				    Thread.sleep(100);
-//				}
-//				if(port==Server.port2){
-//				    Thread.sleep(200);
-//				}
-//				if(port==Server.port3){
-//				    Thread.sleep(40);
-//				}
-//				if(port==Server.port4){
-//				    Thread.sleep(10);
-//				}
+				// send data every 0.1 second
+				Thread.sleep(100);
 				
+				// after this point, data will be sent to the server side
 				sender.write(dataString+"\n");
 				sender.flush();
 			}

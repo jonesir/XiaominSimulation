@@ -1,5 +1,0 @@
-Total Packets Sent : 1000
-Packets Lost       : 0
-Packet Lost Ratio  : 0.0%
------------------------------
-

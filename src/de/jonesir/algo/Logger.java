@@ -21,8 +21,8 @@ public class Logger {
     public static void logResult(){
 	String writerString = "";
 	writerString += "Total Packets Sent : " + ClientLauncher.blockCount + "\n";
-	writerString += "Packets Lost       : " + Server.packetLost + "\n";
-	writerString += "Packet Lost Ratio  : " + 100*((double)Server.packetLost)/ClientLauncher.blockCount + "%\n";
+	writerString += "Packets Lost       : " + Server.NUMBER_OF_LOST_PACKETS + "\n";
+	writerString += "Packet Lost Ratio  : " + 100*((double)Server.NUMBER_OF_LOST_PACKETS)/ClientLauncher.blockCount + "%\n";
 	writerString += "-----------------------------\n\n";
 	    try {
 		@SuppressWarnings("resource")
