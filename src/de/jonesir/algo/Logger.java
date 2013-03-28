@@ -22,7 +22,7 @@ public class Logger {
 	@SuppressWarnings("resource")
 	public static void logResult() {
 		String writerString = "";
-		if (GlobalConfig.dataIsEncoded) {
+		if (GlobalConfig.encoded) {
 			writerString += "Encoding : YES \n";
 		} else {
 			writerString += "Encoding : NO \n";
@@ -38,12 +38,13 @@ public class Logger {
 		writerString += "-----------------------------\n\n";
 		try {
 			BufferedWriter writer;
-			if (GlobalConfig.dataIsEncoded)
+			if (GlobalConfig.encoded)
 				writer = new BufferedWriter(new FileWriter(result_encode, true));
 			else
 				writer = new BufferedWriter(new FileWriter(result_multipath, true));
 			writer.append(writerString);
 			writer.flush();
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

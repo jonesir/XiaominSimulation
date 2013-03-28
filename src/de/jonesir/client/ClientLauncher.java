@@ -21,18 +21,10 @@ import de.jonesir.algo.GlobalConfig;
  * 
  */
 public class ClientLauncher {
-
+    // different ports for data link and command sending
     public static final int port1 = 4189, port2 = 4190, port3 = 4191, port4 = 4192, terminatorPort = 4193; // 4
-    // port
-    // numbers
-    // stands
-    // for
-    // 4
-    // corresponding
-    // links
-    // destination
 
-    public static final boolean dataIsEncoded = true; // decide whether to be tranfered data is encoded or not
+    public static final boolean encoded = true; // decide whether to be tranfered data is encoded or not
     public static final int linkCount = 4; // number of links through which data will be sent
     public static final int blockCount = 1000; // number of total blocks need
     public static final Random random = new Random();// generate random number within range
@@ -44,21 +36,8 @@ public class ClientLauncher {
     public static LinkedBlockingQueue<String> buffer3 = new LinkedBlockingQueue<String>();
     public static LinkedBlockingQueue<String> buffer4 = new LinkedBlockingQueue<String>();
 
-//    public static void init(String[] params) {
-//	GlobalConfig.amount_of_packets = Integer.parseInt(params[0]);
-//	GlobalConfig.MAX_SHARED_BUFFER_SIZE = Integer.parseInt(params[1]);
-//	GlobalConfig.tempoN1 = Integer.parseInt(params[2]);
-//	GlobalConfig.tempoN2 = Integer.parseInt(params[2]);
-//	GlobalConfig.tempoN3 = Integer.parseInt(params[2]);
-//	GlobalConfig.tempoN4 = Integer.parseInt(params[2]);
-//	GlobalConfig.dataIsEncoded = Integer.parseInt(params[3]) == 1 ? true : false;
-//    }
-
     @SuppressWarnings("resource")
     public static void main(String[] args) {
-	// initialized parameters
-//	init(args);
-
 	// start the sender thread to send traffic once data is available in
 	// each queue
 	// the 4 threads are each responsible for 1 link
@@ -69,21 +48,22 @@ public class ClientLauncher {
 	new TrafficGenerator(Server.port4, 4).start();
 
 	// prepare the possible parameters combination list
-	GlobalConfig.generateParams();
-
+	GlobalConfig.generateParams();// after this, the parameter list has entries with all combinations
 	int simulation_counter = 1;
 
+	// iterate through all the combinations
 	for (int[] params : GlobalConfig.params) {
 
-	    // initialized parameters for this round of simulation
+	    // initialized parameters for each round of simulation
 	    GlobalConfig.refreshParams(params[0], params[1], params[2], params[3]);
+	    System.out.println("Total Packets: " + params[0] + ", Buffer Size: " + params[1] + ", Tempo: " + params[2] + ", Encoded Flag: " + params[3]);
 
 	    String[] packetUnit = new String[linkCount];
 	    int packetUnitIndex = 0;
 	    // generate data and put them into each queue
 	    for (int i = 0; i < GlobalConfig.amount_of_packets; i++) {
 		/* Scenario without coding */
-		if (!GlobalConfig.dataIsEncoded) {
+		if (!GlobalConfig.encoded) {
 		    // generate a block
 		    Block dataBlock = new Block(0, null);
 
@@ -147,18 +127,11 @@ public class ClientLauncher {
 
 	    }
 
-	    // after some delay, send the termination command to terminate the simulation and log the result
+	    // after half second, send the termination command to terminate this round of simulation and log the result
 	    try {
-		Thread.sleep(10000);
+		Thread.sleep(500);
 	    } catch (InterruptedException e) {
 		e.printStackTrace();
-	    }
-
-	    // wait some time for the client side threads close the connection successfully
-	    try {
-		Thread.sleep(5000);
-	    } catch (InterruptedException e1) {
-		e1.printStackTrace();
 	    }
 
 	    // send termination command to Terminator.java on the server side
@@ -167,19 +140,35 @@ public class ClientLauncher {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(terminator.getOutputStream()));
 		writer.write("terminate");
 		writer.flush();
-		writer.close();
 	    } catch (UnknownHostException e) {
 		e.printStackTrace();
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    }
 	    System.out.println("Simluation Round " + (simulation_counter++) + " finishes");
+
+	    // after 5 seconds, begin another simulation with new combination of parameters
 	    try {
 		Thread.sleep(5000);
 	    } catch (InterruptedException e) {
 		e.printStackTrace();
 	    }
+	    // reset all resources for the new round of simulation
+	    reset();
 	}
+
+	// close connections to stop client threads
+	TrafficGenerator.closeConnection = true;
+
+	try {
+	    Thread.sleep(500);
+	} catch (InterruptedException e) {
+	    e.printStackTrace();
+	}
+	ClientLauncher.buffer1.add("completeTerminate");
+	ClientLauncher.buffer2.add("completeTerminate");
+	ClientLauncher.buffer3.add("completeTerminate");
+	ClientLauncher.buffer4.add("completeTerminate");
 
 	// send termination command to Terminator.java on the server side
 	try {
@@ -187,20 +176,16 @@ public class ClientLauncher {
 	    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(terminator.getOutputStream()));
 	    writer.write("completeTerminate");
 	    writer.flush();
+	    // After five second of all the simulations, close command connection
+	    Thread.sleep(5000);
 	    writer.close();
 	} catch (UnknownHostException e) {
 	    e.printStackTrace();
 	} catch (IOException e) {
 	    e.printStackTrace();
-	}
-	try {
-	    Thread.sleep(5000);
 	} catch (InterruptedException e) {
 	    e.printStackTrace();
 	}
-
-	// close connections
-	TrafficGenerator.closeConnection = true;
 
 	System.out.println("Client Stops Sending !");
 

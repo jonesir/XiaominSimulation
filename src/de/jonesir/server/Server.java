@@ -31,37 +31,27 @@ public class Server {
     // Synchronized lock object
     public static int[] lock = new int[0];
 
-    public static void init(String[] params) {
-	GlobalConfig.amount_of_packets = Integer.parseInt(params[0]);
-	GlobalConfig.MAX_SHARED_BUFFER_SIZE = Integer.parseInt(params[1]);
-	GlobalConfig.tempoN1 = Integer.parseInt(params[2]);
-	GlobalConfig.tempoN2 = Integer.parseInt(params[2]);
-	GlobalConfig.tempoN3 = Integer.parseInt(params[2]);
-	GlobalConfig.tempoN4 = Integer.parseInt(params[2]);
-	GlobalConfig.dataIsEncoded = Integer.parseInt(params[3]) == 1 ? true : false;
-    }
-
-    public static void resetParams(){
-	synchronized(Server.lock){
+    public static void resetParams() {
+	synchronized (Server.lock) {
 	    Server.SHARED_BUFFER.clear();
 	}
 	GlobalConfig.begin = 0;
 	GlobalConfig.end = 0;
-	Server.NUMBER_OF_LOST_PACKETS = 0;
-    }
-    
-    public static void refreshParams(){
-	if(GlobalConfig.paramCombinationCounter<GlobalConfig.params.size()){
-	    int[] temp = GlobalConfig.params.get(GlobalConfig.paramCombinationCounter++);
-	    GlobalConfig.refreshParams(temp[0], temp[1], temp[2], temp[3]);
+	synchronized (ServerProcesser.lock1) {
+	    Server.NUMBER_OF_LOST_PACKETS = 0;
 	}
     }
-    
+
+    public static void refreshParams() {
+	int[] temp = GlobalConfig.params.get(GlobalConfig.paramCombinationCounter++);
+	GlobalConfig.refreshParams(temp[0], temp[1], temp[2], temp[3]);
+    }
+
     public static void main(String[] args) {
 	// prepare the possible parameters list
 	GlobalConfig.generateParams();
 	refreshParams();
-	
+
 	// buffer emptier remove the data from shared buffer if complete generation has been received
 	Thread bufferEmptier = new Thread(new BufferEmptier());
 

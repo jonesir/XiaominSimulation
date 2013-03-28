@@ -19,6 +19,8 @@ public class ServerProcesser implements Runnable {
 
     int port; // port number that this thread listen on
 
+    public static int[] lock1 = new int[0];
+    
     public ServerProcesser(int port) {
 	this.port = port;
     }
@@ -49,9 +51,10 @@ public class ServerProcesser implements Runnable {
 			if (Server.SHARED_BUFFER.size() < GlobalConfig.MAX_SHARED_BUFFER_SIZE) {
 			    Server.SHARED_BUFFER.add(incomingString);
 			}
+		    
 			// otherwise increment the packet lost variable
 			else {
-			    synchronized (this) {
+			    synchronized (ServerProcesser.lock1) {
 				System.out.println("Lost : " + Server.NUMBER_OF_LOST_PACKETS++);
 			    }
 			}

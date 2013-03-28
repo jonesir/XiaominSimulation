@@ -91,26 +91,28 @@ public class TrafficGenerator extends Thread {
 	    // while (true) {
 	    while (!Thread.currentThread().isInterrupted()) {
 		dataString = buffer.take();
-		// setting data sending tempo
-		if (port == ClientLauncher.port1) {
-		    Thread.sleep(GlobalConfig.tempo1, GlobalConfig.tempoN1);
-		}
-		if (port == ClientLauncher.port2) {
-		    Thread.sleep(GlobalConfig.tempo2, GlobalConfig.tempoN2);
-		}
-		if (port == ClientLauncher.port3) {
-		    Thread.sleep(GlobalConfig.tempo3, GlobalConfig.tempoN3);
-		}
-		if (port == ClientLauncher.port4) {
-		    Thread.sleep(GlobalConfig.tempo4, GlobalConfig.tempoN4);
-		}
 
-		// after this point, data will be sent to the server side
-		sender.write(dataString + "\n");
-		sender.flush();
-		if(TrafficGenerator.closeConnection){
+		if (TrafficGenerator.closeConnection) {
 		    sender.close();
 		    Thread.currentThread().stop();
+		} else {
+		    // setting data sending tempo
+		    if (port == ClientLauncher.port1) {
+			Thread.sleep(GlobalConfig.tempo1, GlobalConfig.tempoN1);
+		    }
+		    if (port == ClientLauncher.port2) {
+			Thread.sleep(GlobalConfig.tempo2, GlobalConfig.tempoN2);
+		    }
+		    if (port == ClientLauncher.port3) {
+			Thread.sleep(GlobalConfig.tempo3, GlobalConfig.tempoN3);
+		    }
+		    if (port == ClientLauncher.port4) {
+			Thread.sleep(GlobalConfig.tempo4, GlobalConfig.tempoN4);
+		    }
+
+		    // after this point, data will be sent to the server side
+		    sender.write(dataString + "\n");
+		    sender.flush();
 		}
 	    }
 

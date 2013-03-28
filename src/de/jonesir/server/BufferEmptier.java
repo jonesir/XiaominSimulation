@@ -33,7 +33,7 @@ public class BufferEmptier implements Runnable {
 			GlobalConfig.begin = System.nanoTime();
 			GlobalConfig.shouldBegin = false;
 		    }
-		    if (GlobalConfig.dataIsEncoded) {
+		    if (GlobalConfig.encoded) {
 			// prepare a list of array to store possible candidates
 			// iterate through the buffer
 			for (int i = 0; i < Server.SHARED_BUFFER.size(); i++) {

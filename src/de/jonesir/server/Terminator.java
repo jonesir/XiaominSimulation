@@ -13,49 +13,49 @@ import de.jonesir.client.ClientLauncher;
 
 public class Terminator implements Runnable {
 
-	private ArrayList<Thread> threads;
+    private ArrayList<Thread> threads;
 
-	public Terminator(ArrayList<Thread> threads) {
-		this.threads = threads;
-	}
+    public Terminator(ArrayList<Thread> threads) {
+	this.threads = threads;
+    }
 
-	@Override
-	public void run() {
-		System.out.println("Terminator is running ... ");
-		try {
-			ServerSocket ss = new ServerSocket(ClientLauncher.terminatorPort);
-			Socket s = ss.accept();
+    @Override
+    public void run() {
+	System.out.println("Terminator is running ... ");
+	try {
+	    ServerSocket ss = new ServerSocket(ClientLauncher.terminatorPort);
+	    Socket s = ss.accept();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			String readString;
-			while ((readString = reader.readLine())!=null){
-			    	
-				if (readString.equals("terminate")) {
-					System.out.println("Simulation " + GlobalConfig.paramCombinationCounter + " terminates");
-					
-					// set the time stamp of ending processing the SHARED_BUFFER
-					GlobalConfig.end = System.nanoTime();
-					// log the result
-					Logger.logResult();
+	    BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+	    String readString;
+	    while (true) {
+		readString = reader.readLine();
+		if (readString.equals("terminate")) {
+		    System.out.println("Simulation " + GlobalConfig.paramCombinationCounter + " terminates");
 
-					// refresh parameters and reset variables
-					Server.refreshParams();
-					Server.resetParams();
-				} 
-				if (readString.equals("completeTerminate")){
-				    for(Thread t : threads){
-					t.stop();
-				    }
-				    Thread.sleep(3000);
-				    System.exit(0);
-				}
+		    // set the time stamp of ending processing the SHARED_BUFFER
+		    GlobalConfig.end = System.nanoTime();
+		    // log the result
+		    Logger.logResult();
 
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-		    e.printStackTrace();
+		    // refresh parameters and reset variables
+		    Server.refreshParams();
+		    Server.resetParams();
 		}
+		if (readString.equals("completeTerminate")) {
+		    for (Thread t : threads) {
+			t.stop();
+		    }
+		    Thread.sleep(3000);
+		    System.exit(0);
+		}
+
+	    }
+	} catch (IOException e) {
+	    e.printStackTrace();
+	} catch (InterruptedException e) {
+	    e.printStackTrace();
 	}
+    }
 
 }
