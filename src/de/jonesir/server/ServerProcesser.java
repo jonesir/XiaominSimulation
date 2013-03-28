@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import de.jonesir.algo.GlobalConfig;
 import de.jonesir.algo.Logger;
 
 /**
@@ -44,7 +46,7 @@ public class ServerProcesser implements Runnable {
 
 					synchronized (Server.lock) {
 						// put the incoming string into the shared buffer if it is not full
-						if (Server.SHARED_BUFFER.size() < Server.MAX_SHARED_BUFFER_SIZE) {
+						if (Server.SHARED_BUFFER.size() < GlobalConfig.MAX_SHARED_BUFFER_SIZE) {
 							Server.SHARED_BUFFER.add(incomingString);
 						}
 						// otherwise increment the packet lost variable

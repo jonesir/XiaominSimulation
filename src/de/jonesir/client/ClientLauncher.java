@@ -12,6 +12,7 @@ import de.jonesir.beans.Block;
 import de.jonesir.server.Server;
 import de.jonesir.beans.Packet;
 import de.jonesir.algo.Encoder;
+import de.jonesir.algo.GlobalConfig;
 
 /**
  * Client for generating and putting data into corresponding link
@@ -57,9 +58,9 @@ public class ClientLauncher {
 		String[] packetUnit = new String[linkCount];
 		int packetUnitIndex = 0;
 		// generate data and put them into each queue
-		for (int i = 0; i < ClientLauncher.blockCount; i++) {
+		for (int i = 0; i < GlobalConfig.blockCount; i++) {
 			/* Scenario without coding */
-			if (!ClientLauncher.dataIsEncoded) {
+			if (!GlobalConfig.dataIsEncoded) {
 				// generate a block
 				Block dataBlock = new Block(0, null);
 
@@ -142,7 +143,7 @@ public class ClientLauncher {
 		
 		// send termination command to Terminator.java on the server side
 		try {
-			Socket terminator = new Socket(TrafficGenerator.address, ClientLauncher.terminatorPort);
+			Socket terminator = new Socket(TrafficGenerator.address, GlobalConfig.terminatorPort);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(terminator.getOutputStream()));
 			writer.write("terminate");
 			writer.flush();

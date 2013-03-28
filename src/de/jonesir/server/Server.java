@@ -6,6 +6,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import de.jonesir.algo.GlobalConfig;
+
 /**
  * Server that accept data from client through 4 different links and process them accordingly
  * 
@@ -36,10 +38,10 @@ public class Server {
 		
 		// four thread which generate server socket listening on different ports for different links
 		// these links put incoming data directly into the shared buffer
-		Thread sp1 = new Thread(new ServerProcesser(port1));
-		Thread sp2 = new Thread(new ServerProcesser(port2));
-		Thread sp3 = new Thread(new ServerProcesser(port3));
-		Thread sp4 = new Thread(new ServerProcesser(port4));
+		Thread sp1 = new Thread(new ServerProcesser(GlobalConfig.port1));
+		Thread sp2 = new Thread(new ServerProcesser(GlobalConfig.port2));
+		Thread sp3 = new Thread(new ServerProcesser(GlobalConfig.port3));
+		Thread sp4 = new Thread(new ServerProcesser(GlobalConfig.port4));
 		
 		// create a list of threads
 		ArrayList<Thread> threads = new ArrayList<Thread>();

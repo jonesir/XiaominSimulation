@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import de.jonesir.algo.Encoder;
+import de.jonesir.algo.GlobalConfig;
 
 import de.jonesir.beans.Packet;
 import de.jonesir.client.ClientLauncher;
@@ -27,7 +28,7 @@ public class BufferEmptier implements Runnable {
 				System.out.println("====================================================");
 				log("Server.SHARED_BUFFER.size() === " + Server.SHARED_BUFFER.size());
 				if (Server.SHARED_BUFFER.size() != 0) {
-					if (ClientLauncher.dataIsEncoded) {
+					if (GlobalConfig.dataIsEncoded) {
 						// prepare a list of array to store possible candidates
 						// iterate through the buffer
 						for (int i = 0; i < Server.SHARED_BUFFER.size(); i++) {

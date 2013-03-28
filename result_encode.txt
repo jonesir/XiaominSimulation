@@ -54,3 +54,11 @@ Packets Lost       : 22
 Packet Lost Ratio  : 2.2%
 -----------------------------
 
+Encoding : YES 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in miliseconds : 100, 100, 100, 100
+Total Packets Sent : 1000
+Packets Lost       : 0
+Packet Lost Ratio  : 0.0%
+-----------------------------
+

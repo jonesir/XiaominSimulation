@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import de.jonesir.algo.GlobalConfig;
 import de.jonesir.server.Server;
 
 /**
@@ -75,16 +76,16 @@ public class TrafficGenerator extends Thread {
 
 			// DELAY
 			if(port==ClientLauncher.port1){
-				Thread.sleep(delay1);
+				Thread.sleep(GlobalConfig.delay1);
 			}
 			if(port==ClientLauncher.port2){
-				Thread.sleep(delay2);
+				Thread.sleep(GlobalConfig.delay2);
 			}
 			if(port==ClientLauncher.port3){
-				Thread.sleep(delay3);
+				Thread.sleep(GlobalConfig.delay3);
 			}
 			if(port==ClientLauncher.port4){
-				Thread.sleep(delay4);
+				Thread.sleep(GlobalConfig.delay4);
 			}
 			
 			while (true) {
@@ -95,16 +96,16 @@ public class TrafficGenerator extends Thread {
 					dataString = buffer.take();
 					// setting data sending tempo
 					if(port==ClientLauncher.port1){
-						Thread.sleep(tempo1);
+						Thread.sleep(GlobalConfig.tempo1);
 					}
 					if(port==ClientLauncher.port2){
-						Thread.sleep(tempo2);
+						Thread.sleep(GlobalConfig.tempo2);
 					}
 					if(port==ClientLauncher.port3){
-						Thread.sleep(tempo3);
+						Thread.sleep(GlobalConfig.tempo3);
 					}
 					if(port==ClientLauncher.port4){
-						Thread.sleep(tempo4);
+						Thread.sleep(GlobalConfig.tempo4);
 					}
 
 					// after this point, data will be sent to the server side

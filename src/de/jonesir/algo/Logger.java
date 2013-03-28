@@ -19,6 +19,8 @@ import de.jonesir.server.Server;
  */
 public class Logger {
 
+	public static String result_encode = "result_encode.txt";
+	public static String result_multipath = "result_multipath.txt";
 	@SuppressWarnings("resource")
 	public static void logResult() {
 		String writerString = "";
@@ -36,9 +38,9 @@ public class Logger {
 		try {
 			BufferedWriter writer;
 			if (ClientLauncher.dataIsEncoded)
-				writer = new BufferedWriter(new FileWriter("/home/jonesir/workspace/eclipse/Simu/result_encode.txt", true));
+				writer = new BufferedWriter(new FileWriter(result_encode, true));
 			else
-				writer = new BufferedWriter(new FileWriter("/home/jonesir/workspace/eclipse/Simu/result_multipath.txt", true));
+				writer = new BufferedWriter(new FileWriter(result_multipath, true));
 			writer.append(writerString);
 			writer.flush();
 		} catch (IOException e) {
