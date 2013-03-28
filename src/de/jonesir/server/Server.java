@@ -32,13 +32,29 @@ public class Server {
 	public static void main(String[] args) {
 
 		// buffer emptier remove the data from shared buffer if complete generation has been received
-		new Thread(new BufferEmptier()).start();
-
+		Thread bufferEmptier = new Thread(new BufferEmptier());
+		
 		// four thread which generate server socket listening on different ports for different links
 		// these links put incoming data directly into the shared buffer
-		new Thread(new ServerProcesser(port1)).start();
-		new Thread(new ServerProcesser(port2)).start();
-		new Thread(new ServerProcesser(port3)).start();
-		new Thread(new ServerProcesser(port4)).start();
+		Thread sp1 = new Thread(new ServerProcesser(port1));
+		Thread sp2 = new Thread(new ServerProcesser(port2));
+		Thread sp3 = new Thread(new ServerProcesser(port3));
+		Thread sp4 = new Thread(new ServerProcesser(port4));
+		
+		// create a list of threads
+		ArrayList<Thread> threads = new ArrayList<Thread>();
+		threads.add(bufferEmptier);
+		threads.add(sp1);
+		threads.add(sp2);
+		threads.add(sp3);
+		threads.add(sp4);
+		
+		// start threads
+		for(Thread t : threads){
+			t.start();
+		}
+		
+		// start the terminator thread
+		new Thread(new Terminator(threads)).start();
 	}
 }

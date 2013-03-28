@@ -43,6 +43,7 @@ public class ClientLauncher {
 	public static LinkedBlockingQueue<String> buffer3 = new LinkedBlockingQueue<String>();
 	public static LinkedBlockingQueue<String> buffer4 = new LinkedBlockingQueue<String>();
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		// start the sender thread to send traffic once data is available in
 		// each queue
@@ -104,37 +105,55 @@ public class ClientLauncher {
 				// put packet's binary string into array, which will
 				packetUnit[packetUnitIndex++] = dataPacket.toBinaryString();
 
-				//A generation of Packet has been collected, it is sent to be encoded and then sent to server
+				// A generation of Packet has been collected, it is sent to be encoded and then sent to server
 				if ((i + 1) % 4 == 0) {
 					// encode the generation of packets
 					String[] encodedPacket = Encoder.encode_apache(packetUnit);
-					
+
 					// place each of the packet in the generation into different Linked Blocking Queue
 					ClientLauncher.buffer1.add(encodedPacket[0]);
 					ClientLauncher.buffer2.add(encodedPacket[1]);
 					ClientLauncher.buffer3.add(encodedPacket[2]);
 					ClientLauncher.buffer4.add(encodedPacket[3]);
-					
-					// reset  
+
+					// reset
 					packetUnitIndex = 0;
 				}
 			}
 
 		}
-		// try {
-		// Socket terminator = new Socket(TrafficGenerator.address,
-		// ClientLauncher.terminatorPort);
-		// BufferedWriter writer = new BufferedWriter(new
-		// OutputStreamWriter(terminator.getOutputStream()));
-		// writer.write("terminate");
-		// writer.flush();
-		// writer.close();
-		// } catch (UnknownHostException e) {
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
+
+		// after some delay, send the termination command to terminate the simulation and log the result
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		// close connections
+		TrafficGenerator.closeConnection = true;
+		
+		// wait some time for the client side threads close the connection successfully
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
+		// send termination command to Terminator.java on the server side
+		try {
+			Socket terminator = new Socket(TrafficGenerator.address, ClientLauncher.terminatorPort);
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(terminator.getOutputStream()));
+			writer.write("terminate");
+			writer.flush();
+			writer.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		System.out.println("Client Stops Sending !");
+		System.exit(0);
 	}
 
 	public static void log(String logString) {

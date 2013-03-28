@@ -15,9 +15,22 @@ import de.jonesir.server.Server;
  * 
  */
 public class TrafficGenerator extends Thread {
-
+	// specify delay value for each link
+	public static int delay1 = 500;
+	public static int delay2 = 300;
+	public static int delay3 = 400;
+	public static int delay4 = 600;
+	
+	// specify sending tempo for each link
+	public static int tempo1 = 100;
+	public static int tempo2 = 100;
+	public static int tempo3 = 100;
+	public static int tempo4 = 100;
+	
 	public static String address = "127.0.0.1"; // host address of the server
 	int port, bufferNumber; // port number for the instance of this class to send data and the buffer number it should take data from
+
+	public static boolean closeConnection = false;
 
 	/**
 	 * @param port
@@ -59,22 +72,52 @@ public class TrafficGenerator extends Thread {
 			// create sender to specific host and port
 			Socket s = new Socket(address, port);
 			BufferedWriter sender = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-			
-			while (true) {
-				dataString = buffer.take();
-				// send data every 0.1 second
-				Thread.sleep(100);
-				
-				// after this point, data will be sent to the server side
-				sender.write(dataString+"\n");
-				sender.flush();
+
+			// DELAY
+			if(port==ClientLauncher.port1){
+				Thread.sleep(delay1);
+			}
+			if(port==ClientLauncher.port2){
+				Thread.sleep(delay2);
+			}
+			if(port==ClientLauncher.port3){
+				Thread.sleep(delay3);
+			}
+			if(port==ClientLauncher.port4){
+				Thread.sleep(delay4);
 			}
 			
+			while (true) {
+				if (closeConnection) {
+					sender.close();
+				} else {
+					
+					dataString = buffer.take();
+					// setting data sending tempo
+					if(port==ClientLauncher.port1){
+						Thread.sleep(tempo1);
+					}
+					if(port==ClientLauncher.port2){
+						Thread.sleep(tempo2);
+					}
+					if(port==ClientLauncher.port3){
+						Thread.sleep(tempo3);
+					}
+					if(port==ClientLauncher.port4){
+						Thread.sleep(tempo4);
+					}
+
+					// after this point, data will be sent to the server side
+					sender.write(dataString + "\n");
+					sender.flush();
+				}
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		} finally{
+		} finally {
 		}
 	}
 }

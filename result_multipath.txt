@@ -1,0 +1,48 @@
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in miliseconds : 100, 100, 100, 100
+Total Packets Sent : 1000
+Packets Lost       : 209
+Packet Lost Ratio  : 20.9%
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in miliseconds : 100, 100, 100, 100
+Total Packets Sent : 1000
+Packets Lost       : 11
+Packet Lost Ratio  : 1.1%
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in miliseconds : 100, 100, 100, 100
+Total Packets Sent : 1000
+Packets Lost       : 0
+Packet Lost Ratio  : 0.0%
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in miliseconds : 100, 100, 100, 100
+Total Packets Sent : 1000
+Packets Lost       : 0
+Packet Lost Ratio  : 0.0%
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in miliseconds : 100, 100, 100, 100
+Total Packets Sent : 1000
+Packets Lost       : 115
+Packet Lost Ratio  : 11.5%
+-----------------------------
+
+Encoding : NO 
+Delay Setting in miliseconds : 500, 300, 400, 600
+Sending Tempo Setting in miliseconds : 100, 100, 100, 100
+Total Packets Sent : 1000
+Packets Lost       : 162
+Packet Lost Ratio  : 16.2%
+-----------------------------
+

@@ -90,7 +90,7 @@ public class BufferEmptier implements Runnable {
 						String idString;
 						for (int i = 0; i < Server.SHARED_BUFFER.size(); i++) {
 							tempString = Server.SHARED_BUFFER.get(i);
-							idString = tempString.substring(Server.SHARED_BUFFER.size() - Encoder.BYTE_LENGTH);
+							idString = tempString.substring(tempString.length() - Encoder.BYTE_LENGTH);
 							// find the smallest element
 							if (Integer.parseInt(idString, 2) == minID) {
 								// log("element with ID : " + minID + " found!");
