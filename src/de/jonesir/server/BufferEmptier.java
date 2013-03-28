@@ -14,34 +14,45 @@ import de.jonesir.client.ClientLauncher;
  * 
  */
 public class BufferEmptier implements Runnable {
-    private static int minID = 1;
-    private static HashMap<Integer, ArrayList<String>> candidates = new HashMap<Integer, ArrayList<String>>();
+    public BufferEmptier() {
 
-    public synchronized void run() {
-	// log("BufferEmptier is Running ... ");
+    }
+
+    @Override
+    public void run() {
+	log("BufferEmptier is Running ... ");
 	while (true) {
 	    // synchronized (Server.SHARED_BUFFER) {
-	    // log("waiting for shared buffer to have data");
-	    // log("Server.SHARED_BUFFER.size() = " + Server.SHARED_BUFFER.size());
-
+	    log("Server.SHARED_BUFFER.size() === " + Server.SHARED_BUFFER.size());
 	    if (Server.SHARED_BUFFER.size() != 0) {
+		log("size not = 0");
 		if (ClientLauncher.dataIsEncoded) {
+//		    log("dataISEncoded");
 		    // prepare a list of array to store possible candidates
 		    // iterate through the buffer
 		    for (int i = 0; i < Server.SHARED_BUFFER.size(); i++) {
+			if(candidates.size()==10)
+			    break;
+//			log("first for loop");
 			// extract the id part out of packet and transfer it to decimal value
 			String tempString = Server.SHARED_BUFFER.get(i);
 			String idString = tempString.substring(tempString.length() - Encoder.BYTE_LENGTH);
 			int tempID = Integer.parseInt(idString, 2);
-
+			System.out.println("SHARED_BUFFER_SIZE : " + Server.SHARED_BUFFER.size());
+			System.out.println("TEMP_ID :" + tempID);
 			// check if the id is already in the map
 			// if yes, means this element belong to the same generation and should be inserted into the map value for the decoding later
 			if (candidates.containsKey(tempID / ClientLauncher.linkCount)) {
+//			    log("if inside first for loop");
 			    // get the corresponding array list and insert the element into this list
-			    candidates.get(tempID / ClientLauncher.linkCount).add(tempString);
+			    ArrayList<String> existingGeneration = candidates.get(tempID / ClientLauncher.linkCount);
+			    if(existingGeneration.size()!=4){
+				existingGeneration.add(tempString);
+			    }
 			}
 			// if not, means this element belongs to no generation in the map yet, a new array list for generation with this id should be created
 			else {
+//			    log("else inside first for loop");
 			    ArrayList<String> tempList = new ArrayList<String>();
 			    tempList.add(tempString);
 			    candidates.put(tempID / ClientLauncher.linkCount, tempList);
@@ -53,19 +64,33 @@ public class BufferEmptier implements Runnable {
 		     */
 
 		    for (Integer id : candidates.keySet()) {
+//			log("second for loop");
+
 			// if the array list has 4 elements
-			ArrayList<String> tempList = candidates.get(id);
-			if (tempList.size() == 4) {
-			    // sent to decoder for decoding
-			    prepareForDecoding(tempList);
-			    // delete each element out of the array list from the BUFFER
-			    for (String packetString : tempList)
+			ArrayList<String> generationList = candidates.get(id);
+//			log("generationList :" + generationList);
+			log("generationlist size() = " + generationList.size());
+			if (generationList.size() == 4) {
+			    /* 1. FIND THE COMPLETE GENERATION IN THE MAP*/
+//			    log("if inside second for loop");
+			    /* 2. DECODE THE COMPLETE GENERATION */
+			    prepareForDecoding(generationList);
+			    /* 3. REMOVE THE GENERATION FROM THE SHARED_BUFFER */
+			    for (String packetString : generationList) {
+				log("Server.SHARED_BUFFER.size() before remove = " + Server.SHARED_BUFFER.size());
 				Server.SHARED_BUFFER.remove(packetString);
+				log("Server.SHARED_BUFFER.size() after remove= " + Server.SHARED_BUFFER.size());
+//				try {
+//				    Thread.sleep(100);
+//				} catch (InterruptedException e) {
+//				    e.printStackTrace();
+//				}
+			    }
 			}
 
-			// clear all the entries in the map for the next round
-			candidates.clear();
 		    }
+		    /* After each round of iteration through the SHARED_BUFFER, clear the candidate map */
+		    candidates.clear();
 		} else { // no encoding
 		    String tempString;
 		    String idString;
@@ -74,7 +99,7 @@ public class BufferEmptier implements Runnable {
 			idString = tempString.substring(Server.SHARED_BUFFER.size() - Encoder.BYTE_LENGTH);
 			// find the smallest element
 			if (Integer.parseInt(idString, 2) == minID) {
-			    log("element with ID : " + minID + " found!");
+			    // log("element with ID : " + minID + " found!");
 			    // swap the element with the smallest ID to the first position
 			    if (i != 0) {
 				log("switch to the first position");
@@ -92,6 +117,9 @@ public class BufferEmptier implements Runnable {
 	}
     }
 
+    private static int minID = 1;
+    private static HashMap<Integer, ArrayList<String>> candidates = new HashMap<Integer, ArrayList<String>>();
+
     private String[] prepareForDecoding(ArrayList<String> candidate) {
 	String[] generation = new String[ClientLauncher.linkCount];
 	for (int i = 0; i < generation.length; i++) {
@@ -102,6 +130,7 @@ public class BufferEmptier implements Runnable {
     }
 
     public void log(String logString) {
-	System.out.println("BufferEmptier ::: " + logString);
+	 System.out.println("BufferEmptier ::: " + logString);
     }
+
 }

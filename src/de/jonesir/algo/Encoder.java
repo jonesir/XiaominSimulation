@@ -30,10 +30,8 @@ public class Encoder {
 //		}
 //		System.out.println("Result of GF : \n" + resultGF );
 //		System.out.println("Result of Inverse GF : \n" + resultIGF );
-	  System.out.println(""+13/4);
-	  System.out.println(""+12/4);
-	  System.out.println(""+14/4);
-	  System.out.println(""+15/4);
+	  System.out.println(""+(2<<7));
+	 
 	}
 
 	/**

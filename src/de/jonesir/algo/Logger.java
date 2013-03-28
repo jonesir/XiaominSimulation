@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import de.jonesir.client.ClientLauncher;
+import de.jonesir.server.Server;
+
 /**
  * 
  * class used to log results of simulation
@@ -14,6 +17,24 @@ import java.util.Random;
  * 
  */
 public class Logger {
+    
+    public static void logResult(){
+	String writerString = "";
+	writerString += "Total Packets Sent : " + ClientLauncher.blockCount + "\n";
+	writerString += "Packets Lost       : " + Server.packetLost + "\n";
+	writerString += "Packet Lost Ratio  : " + 100*((double)Server.packetLost)/ClientLauncher.blockCount + "%\n";
+	writerString += "-----------------------------\n\n";
+	    try {
+		@SuppressWarnings("resource")
+		BufferedWriter writer = new BufferedWriter(new FileWriter("result.txt",true));
+		writer.append(writerString);
+		writer.flush();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	
+    }
+    
     public static void generateGaloisFieldMatrix(int matrixSize, int elementSize) {
 	int gfSize = 2 << (elementSize - 1);
 	String[] gfStrings = new String[gfSize];

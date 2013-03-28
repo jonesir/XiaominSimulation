@@ -16,7 +16,7 @@ import de.jonesir.server.Server;
  */
 public class TrafficGenerator extends Thread {
 
-	String address = "127.0.0.1"; // host address of the server
+	public static String address = "127.0.0.1"; // host address of the server
 	int port, bufferNumber; // port number for the instance of this class to send data and the buffer number it should take data from
 
 	/**
@@ -60,22 +60,36 @@ public class TrafficGenerator extends Thread {
 			Socket s = new Socket(address, port);
 			BufferedWriter sender = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			
-			// the loop to take Block from buffer and send to corresponding server and port
+			
+			// Delay
+//			if(port==Server.port1){
+//			    Thread.sleep(100);// delay
+//			}
+//			if(port==Server.port2){
+//			    Thread.sleep(200);
+//			}
+//			if(port==Server.port3){
+//			    Thread.sleep(40);
+//			}
+//			if(port==Server.port4){
+//			    Thread.sleep(10);
+//			}
 			while (true) {
 				dataString = buffer.take();
 //				System.out.println("buffer '" + bufferNumber + "',  retrieved dataString : " + dataString);
-				if(port==Server.port1){
-				    Thread.sleep(100);
-				}
-				if(port==Server.port2){
-				    Thread.sleep(200);
-				}
-				if(port==Server.port3){
-				    Thread.sleep(40);
-				}
-				if(port==Server.port4){
-				    Thread.sleep(10);
-				}
+				// sending speed
+//				if(port==Server.port1){
+//				    Thread.sleep(100);
+//				}
+//				if(port==Server.port2){
+//				    Thread.sleep(200);
+//				}
+//				if(port==Server.port3){
+//				    Thread.sleep(40);
+//				}
+//				if(port==Server.port4){
+//				    Thread.sleep(10);
+//				}
 				
 				sender.write(dataString+"\n");
 				sender.flush();

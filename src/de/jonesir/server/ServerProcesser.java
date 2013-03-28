@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import de.jonesir.algo.Logger;
 
 /**
  * Process the incoming data through a specific link
@@ -39,9 +40,15 @@ public class ServerProcesser implements Runnable {
 		String incomingString = "";
 		// read the data and do the process work from specific link according to port number
 		while ((incomingString = reader.readLine()) != null) {
+		    // System.out.println("receivedID : " + Integer.parseInt(incomingString.substring(64), 2));
 		    // put the incoming string into the shared buffer , which is of size 64 blocks
 		    log("insertIntoBuffer");
-		    Server.TEMP_QUEUE.add(incomingString);
+		    // Server.TEMP_QUEUE.add(incomingString);
+		    if (Server.SHARED_BUFFER.size() < Server.bufferSize)
+			Server.SHARED_BUFFER.add(incomingString);
+		    else {
+			System.out.println("Lost : " + Server.packetLost++);
+		    }
 		}
 	    } catch (IOException e) {
 		e.printStackTrace();
@@ -101,6 +108,6 @@ public class ServerProcesser implements Runnable {
     }
 
     private void log(String logString) {
-	System.out.println("ServerProcesser - " + port + " : " + logString);
+	// System.out.println("ServerProcesser - " + port + " : " + logString);
     }
 }

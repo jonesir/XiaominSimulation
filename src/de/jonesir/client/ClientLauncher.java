@@ -1,5 +1,10 @@
 package de.jonesir.client;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -16,7 +21,7 @@ import de.jonesir.algo.Encoder;
  */
 public class ClientLauncher {
 
-    public static final int port1 = 4189, port2 = 4190, port3 = 4191, port4 = 4192; // 4
+    public static final int port1 = 4189, port2 = 4190, port3 = 4191, port4 = 4192, terminatorPort = 4193; // 4
     // port
     // numbers
     // stands
@@ -26,9 +31,9 @@ public class ClientLauncher {
     // links
     // destination
 
-    public static final boolean dataIsEncoded = false; // decide whether to be tranfered data is encoded or not
+    public static final boolean dataIsEncoded = true; // decide whether to be tranfered data is encoded or not
     public static final int linkCount = 4; // number of links through which data will be sent
-    public static final int blockCount = 100000; // number of total blocks need
+    public static final int blockCount = 10000; // number of total blocks need
     public static final Random random = new Random();// generate random number within range
     public static final int bits = 65;// bits number in binary
     // to be generated and sent
@@ -100,43 +105,33 @@ public class ClientLauncher {
 		    packetUnitIndex = 0;
 
 		    ClientLauncher.buffer1.add(encodedPacket[0]);
+		    log("ecodedPacket[0].id = " + Integer.parseInt(encodedPacket[0].substring(64),2));
 		    ClientLauncher.buffer2.add(encodedPacket[1]);
+		    log("ecodedPacket[1].id = " + Integer.parseInt(encodedPacket[1].substring(64),2));
 		    ClientLauncher.buffer3.add(encodedPacket[2]);
+		    log("ecodedPacket[2].id = " + Integer.parseInt(encodedPacket[2].substring(64),2));
 		    ClientLauncher.buffer4.add(encodedPacket[3]);
+		    log("ecodedPacket[3].id = " + Integer.parseInt(encodedPacket[3].substring(64),2));
 
 		}
-
-		// // get the id of the block and assign the block to corresponding link
-		// // block will be assigned to certain buffer according to its ID
-		// // modulo 4
-		// switch ((int) dataPacket.getPacketID() % ClientLauncher.linkCount) {
-		// case 0:
-		// // System.out.println("switch 0");
-		// ClientLauncher.buffer1.add(dataPacket.toBinaryString());
-		// // System.out.println("Buffer Size 1 : " + ClientLauncher.buffer1.size());
-		// break;
-		// case 1:
-		// // System.out.println("switch 1");
-		// ClientLauncher.buffer2.add(dataPacket.toBinaryString());
-		// // System.out.println("Buffer Size 2 : " + ClientLauncher.buffer2.size());
-		// break;
-		// case 2:
-		// // System.out.println("switch 2");
-		// ClientLauncher.buffer3.add(dataPacket.toBinaryString());
-		// // System.out.println("Buffer Size 3 : " + ClientLauncher.buffer3.size());
-		// break;
-		// case 3:
-		// // System.out.println("switch 3");
-		// ClientLauncher.buffer4.add(dataPacket.toBinaryString());
-		// // System.out.println("Buffer Size 4 : " + ClientLauncher.buffer4.size());
-		// break;
-		// default:
-		// break;
-		// }
 	    }
 
 	}
-	System.out.println("Simulation Finished!");
+//	try {
+//	    Socket terminator = new Socket(TrafficGenerator.address, ClientLauncher.terminatorPort);
+//	    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(terminator.getOutputStream()));
+//	    writer.write("terminate");
+//	    writer.flush();
+//	    writer.close();
+//	} catch (UnknownHostException e) {
+//	    e.printStackTrace();
+//	} catch (IOException e) {
+//	    e.printStackTrace();
+//	}
+	System.out.println("Client Stops Sending !");
     }
 
+    public static void log(String logString){
+//	System.out.println("ClientLauncher - " + logString);
+    }
 }
