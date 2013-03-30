@@ -29,15 +29,15 @@ public class ServerProcesser implements Runnable {
 
 	@SuppressWarnings("resource")
 	@Override
-	public synchronized void run() {
+	public void run() {
 		try {
 			// socket socket on a given port
 			ServerSocket ss = new ServerSocket(port);
-			System.out.println("Listening on port : " + port);
+			log("Listening on port : " + port);
 
 			// Connection with the corresponding client established
 			Socket s = ss.accept();
-			System.out.println("data coming : " + port);
+			log("data coming : " + port);
 
 			// process the incoming data
 			try {
@@ -75,5 +75,6 @@ public class ServerProcesser implements Runnable {
 
 	private void log(String logString) {
 //		 System.out.println("ServerProcesser - " + port + " : " + logString);
+		Logger.ServerProcesserLog("ServerProcesser ::: " + logString);
 	}
 }

@@ -1,0 +1,19 @@
+ ClientLauncher :::  Simulation with following configuration: 
+ ClientLauncher :::  Total Packets: 20000, Buffer Size: 1000, Tempo: 1000, Encoded Flag: 0, Packet Size: 1
+ ClientLauncher :::  begins ... 
+ ClientLauncher :::  Simluation Round 1 begins
+ ClientLauncher :::  Simluation Round 1 finishes
+ ClientLauncher :::  Simluation Round 2 begins
+ ClientLauncher :::  Simluation Round 2 finishes
+ ClientLauncher :::  Simluation Round 3 begins
+ ClientLauncher :::  Simluation Round 3 finishes
+ ClientLauncher :::  Simluation Round 4 begins
+ ClientLauncher :::  Simluation Round 4 finishes
+ ClientLauncher :::  Simluation Round 5 begins
+ ClientLauncher :::  Simluation Round 5 finishes
+ ClientLauncher :::  Simluation Round 6 begins
+ ClientLauncher :::  Simluation Round 6 finishes
+ ClientLauncher :::  Simluation Round 7 begins
+ ClientLauncher :::  Simluation Round 7 finishes
+ ClientLauncher :::  Simluation Round 8 begins
+ ClientLauncher :::  Simluation Round 8 finishes

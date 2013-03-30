@@ -6,6 +6,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import de.jonesir.algo.Logger;
+
 public class TerminatorInformer implements Runnable {
 
 	public volatile boolean stop = false;
@@ -25,7 +27,7 @@ public class TerminatorInformer implements Runnable {
 			String dataString;
 			while (!stop) {
 				dataString = buffer.take();
-				System.out.println("dataString = " + dataString);
+				log("dataString = " + dataString);
 				writer.write(dataString);
 				writer.flush();
 			}
@@ -38,4 +40,7 @@ public class TerminatorInformer implements Runnable {
 		}
 	}
 
+	private void log(String logString){
+		Logger.terminatorInformerLog(" TerminatorInformer ::: " + logString);
+	}
 }

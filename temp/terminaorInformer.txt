@@ -1,0 +1,8 @@
+ TerminatorInformer ::: dataString = NEXT_ROUND
+ TerminatorInformer ::: dataString = NEXT_ROUND
+ TerminatorInformer ::: dataString = NEXT_ROUND
+ TerminatorInformer ::: dataString = NEXT_ROUND
+ TerminatorInformer ::: dataString = NEXT_ROUND
+ TerminatorInformer ::: dataString = NEXT_ROUND
+ TerminatorInformer ::: dataString = NEXT_ROUND
+ TerminatorInformer ::: dataString = NEXT_ROUND

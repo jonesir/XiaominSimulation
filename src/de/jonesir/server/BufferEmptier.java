@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import de.jonesir.algo.Encoder;
 import de.jonesir.algo.GlobalConfig;
+import de.jonesir.algo.Logger;
 
 import de.jonesir.beans.Packet;
 import de.jonesir.client.ClientLauncher;
@@ -25,11 +26,12 @@ public class BufferEmptier implements Runnable {
 	@Override
 	public void run() {
 		log("BufferEmptier is Running ... ");
-
+		int a = 0;
 		while (!stop) {
 			// while (!Thread.currentThread().isInterrupted()) {
 			synchronized (Server.lock) {
-				log("Server.SHARED_BUFFER.size() === " + Server.SHARED_BUFFER.size());
+				if ((a++) % 1000000 == 0)
+					log("Server.SHARED_BUFFER.size() === " + Server.SHARED_BUFFER.size());
 				if (Server.SHARED_BUFFER.size() != 0) {
 					if (GlobalConfig.shouldBegin) {
 						GlobalConfig.begin = System.nanoTime();
@@ -91,8 +93,8 @@ public class BufferEmptier implements Runnable {
 
 						}
 						/* After each round of iteration through the SHARED_BUFFER, clear the candidate map */
-//						System.out.println("with encoding");
-//						System.exit(0);
+						// System.out.println("with encoding");
+						// System.exit(0);
 						candidates.clear();
 
 					} else { // no encoding
@@ -118,8 +120,8 @@ public class BufferEmptier implements Runnable {
 								minID++;
 							}
 						}
-//						System.out.println("without encoding");
-//						System.exit(0);
+						// System.out.println("without encoding");
+						// System.exit(0);
 					}
 				}
 			}
@@ -139,7 +141,8 @@ public class BufferEmptier implements Runnable {
 	}
 
 	public void log(String logString) {
-		System.out.println("BufferEmptier ::: " + logString);
+		// System.out.println("BufferEmptier ::: " + logString);
+		Logger.bufferEmptierLog("BufferEmptier ::: " + logString);
 	}
 
 }

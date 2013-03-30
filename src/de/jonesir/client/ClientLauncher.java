@@ -14,6 +14,7 @@ import de.jonesir.server.Server;
 import de.jonesir.beans.Packet;
 import de.jonesir.algo.Encoder;
 import de.jonesir.algo.GlobalConfig;
+import de.jonesir.algo.Logger;
 
 /**
  * Client for generating and putting data into corresponding link
@@ -42,6 +43,8 @@ public class ClientLauncher {
 		for (int i = 0; i < GlobalConfig.links_amount; i++) {
 			buffers[i] = new LinkedBlockingQueue<String>();
 		}
+		// generate terminator informer thread
+		new Thread(new TerminatorInformer()).start();
 
 		// generate thread for each link(buffer)
 		Thread[] threads = new Thread[GlobalConfig.links_amount];
@@ -51,8 +54,6 @@ public class ClientLauncher {
 			tmp.start();
 		}
 		
-		// generate terminator informer thread
-		new Thread(new TerminatorInformer()).start();
 	}
 
 	@SuppressWarnings({ "resource", "unchecked" })
@@ -65,11 +66,11 @@ public class ClientLauncher {
 
 			// initialized parameters for each simulation under certain configurations
 			GlobalConfig.refreshParams(GlobalConfig.params.get(confNumber)[0], GlobalConfig.params.get(confNumber)[1], GlobalConfig.params.get(confNumber)[2], GlobalConfig.params.get(confNumber)[3], GlobalConfig.params.get(confNumber)[4]);
-			System.out.println("Simulation with following configuration: ");
-			System.out.println("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
-			System.out.println("begins ... ");
+			log("Simulation with following configuration: ");
+			log("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
+			log("begins ... ");
 			for (int simuCount = 0; simuCount < GlobalConfig.rounds_of_simulation_per_configuration; simuCount++) {
-				System.out.println("Simluation Round " + (simuCount + 1) + " begins");
+				log("Simluation Round " + (simuCount + 1) + " begins");
 				// generate data and put them into each queue
 				for (int i = 0; i < GlobalConfig.packets_sent_in_one_simulation; i++) {
 					/* Scenario with coding */
@@ -89,7 +90,7 @@ public class ClientLauncher {
 					e.printStackTrace();
 				}
 
-				System.out.println("Simluation Round " + (simuCount + 1) + " finishes");
+				log("Simluation Round " + (simuCount + 1) + " finishes");
 
 				// reset all resources for the new round of simulation
 				reset();
@@ -110,10 +111,10 @@ public class ClientLauncher {
 				e.printStackTrace();
 			}
 
-			System.out.println("Simulation with following configuration: ");
-			System.out.println("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
-			System.out.println("finishes ... ");
-			System.out.println("==================================================");
+			log("Simulation with following configuration: ");
+			log("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
+			log("finishes ... ");
+			log("==================================================");
 
 			// after 1 seconds, begin another simulation with new configuration
 			try {
@@ -146,7 +147,7 @@ public class ClientLauncher {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("------============ ALL SIMULATIONS FINISHES ============-----------");
+		log("------============ ALL SIMULATIONS FINISHES ============-----------");
 
 		System.exit(0);
 	}
@@ -213,6 +214,6 @@ public class ClientLauncher {
 	}
 
 	public static void log(String logString) {
-		// System.out.println("ClientLauncher - " + logString);
+		Logger.clientLauncherLog(" ClientLauncher :::  " + logString);
 	}
 }

@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.jonesir.algo.GlobalConfig;
+import de.jonesir.algo.Logger;
 import de.jonesir.server.Server;
 
 /**
@@ -78,5 +79,9 @@ public class TrafficGenerator implements Runnable {
 			e.printStackTrace();
 		} finally {
 		}
+	}
+	
+	private void log(String logString){
+		Logger.trafficGeneratorLog("TrafficGenerator ::: " + logString);
 	}
 }

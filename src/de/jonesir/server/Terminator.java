@@ -38,6 +38,7 @@ public class Terminator implements Runnable {
 							log("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
 							log("begins ... ");
 						}else if (readString.equals(GlobalConfig.NEXT_ROUND)) {// next round of simulation with the same configuration
+							log(GlobalConfig.NEXT_ROUND);
 							resetServer(false, 0);
 						}else if (readString.equals(GlobalConfig.SIMU_TERMINATE)) { // stop the complete simulation
 							ServerProcesser.stop = true;// stop the threads waiting for data
@@ -80,6 +81,7 @@ public class Terminator implements Runnable {
 	
 	
 	private void log(String logString){
-		System.out.println("Terminator ::: " + logString);
+//		System.out.println("Terminator ::: " + logString);
+		Logger.terminatorLog("Terminator ::: " + logString);
 	}
 }

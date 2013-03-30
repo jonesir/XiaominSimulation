@@ -28,7 +28,7 @@ public class Logger {
 	private static String lostRatioKey = "Packet Lost Ratio  : ";
 	private static String throughputKey = "Throughput         : ";
 	private static String pps = " Packets per Second";
-	
+
 	@SuppressWarnings("resource")
 	public static void logResult() {
 		String writerString = "";
@@ -38,10 +38,10 @@ public class Logger {
 			writerString += "Multipath \n";
 		}
 		writerString += "Delay Setting in miliseconds : ";
-		for(int i = 0 ; i < GlobalConfig.links_amount ; i++){
+		for (int i = 0; i < GlobalConfig.links_amount; i++) {
 			writerString += GlobalConfig.delays[i];
-			if(i!=GlobalConfig.links_amount-1){
-				writerString+= ", ";
+			if (i != GlobalConfig.links_amount - 1) {
+				writerString += ", ";
 			}
 		}
 		writerString += "\n";
@@ -67,67 +67,67 @@ public class Logger {
 		}
 
 	}
-	
+
 	@SuppressWarnings("resource")
-	public static void logAverage(){
+	public static void logAverage() {
 		log(" Calculating final average result out of log files ... ");
-		
+
 		String fileName = "average-result.txt";
 		String resultsFolder = "results";
-		
+
 		String writerString = "";
 		File results = new File(resultsFolder);
 		File[] resultFiles = results.listFiles();
-		
+
 		ArrayList<String> lostRatios = new ArrayList<String>(); // save all lost ratio results without %
 		ArrayList<String> throughputs = new ArrayList<String>(); // save all throughput results
-		
-		for(File resultFile : resultFiles){
+
+		for (File resultFile : resultFiles) {
 			// write file name
 			writerString += resultFile.getName() + "\t";
-			
+
 			// collect all interested values
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(resultFile));
 				String readString;
-				while((readString=reader.readLine())!=null){
+				while ((readString = reader.readLine()) != null) {
 					// add lost ratio value into lost ratio array
-					if(readString.contains(lostRatioKey)){
+					if (readString.contains(lostRatioKey)) {
 						String[] temp = readString.split(":");
 						String lostRatioRaw = temp[1].trim();
-						lostRatios.add(lostRatioRaw.substring(0, lostRatioRaw.length()-1));
+						lostRatios.add(lostRatioRaw.substring(0, lostRatioRaw.length() - 1));
 					}
 					// add throughput value into throughput array
-					if(readString.contains(throughputKey)){
+					if (readString.contains(throughputKey)) {
 						String[] temp = readString.split(":");
 						String throughputRaw = temp[1];
-						throughputs.add(throughputRaw.substring(0,throughputRaw.length()-pps.length()).trim());
+						throughputs.add(throughputRaw.substring(0, throughputRaw.length() - pps.length()).trim());
 					}
 				}
-				
+
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			// calculate average lost ratio
 			double totalLostRatio = 0;
-			for(String lostRatio : lostRatios){
-				totalLostRatio += Double.parseDouble(lostRatio)/100; // in decimal number
+			for (String lostRatio : lostRatios) {
+				totalLostRatio += Double.parseDouble(lostRatio) / 100; // in decimal number
 			}
-			
-			writerString += "Average Lost Ratio : " + totalLostRatio/lostRatios.size() + "\t";
-			
+
+			writerString += "Average Lost Ratio : " + totalLostRatio / lostRatios.size() + "\t";
+
 			// calculate average throughput
 			double totalThroughput = 0;
-			for(String throughput : throughputs){
+			for (String throughput : throughputs) {
 				totalThroughput += Double.parseDouble(throughput);
 			}
-			
-			writerString += "Average Throughput : " + totalThroughput/throughputs.size() + "\n";
+
+			writerString += "Average Throughput : " + totalThroughput / throughputs.size() + "\n";
 		}
-		
+
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
 			writer.write(writerString);
@@ -135,13 +135,103 @@ public class Logger {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 
-	private static void log(String logString){
+	private static BufferedWriter terminatorWriter = null;
+
+	public static void terminatorLog(String logString) {
+		try {
+			if (terminatorWriter == null) {
+				terminatorWriter = new BufferedWriter(new FileWriter("temp/terminator.txt"));
+//				terminatorWriter = new BufferedWriter(new FileWriter("temp/terminator.txt", true));
+			}
+			terminatorWriter.write(logString + "\n");
+			terminatorWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static BufferedWriter terminatorInformerWriter = null;
+
+	public static void terminatorInformerLog(String logString) {
+		try {
+			if (terminatorInformerWriter == null) {
+				terminatorInformerWriter = new BufferedWriter(new FileWriter("temp/terminaorInformer.txt"));
+//				terminatorInformerWriter = new BufferedWriter(new FileWriter("temp/terminaorInformer.txt", true));
+			}
+			terminatorInformerWriter.write(logString + "\n");
+			terminatorInformerWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static BufferedWriter clientLauncherWriter = null;
+
+	public static void clientLauncherLog(String logString) {
+		try {
+			if (clientLauncherWriter == null) {
+				clientLauncherWriter = new BufferedWriter(new FileWriter("temp/clientLauncher.txt"));
+//				clientLauncherWriter = new BufferedWriter(new FileWriter("temp/clientLauncher.txt", true));
+			}
+			clientLauncherWriter.write(logString + "\n");
+			clientLauncherWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static BufferedWriter trafficGeneratorWriter = null;
+
+	public static void trafficGeneratorLog(String logString) {
+		try {
+			if (trafficGeneratorWriter == null) {
+				trafficGeneratorWriter = new BufferedWriter(new FileWriter("temp/trafficGenerator.txt"));
+//				trafficGeneratorWriter = new BufferedWriter(new FileWriter("temp/trafficGenerator.txt", true));
+			}
+			trafficGeneratorWriter.write(logString + "\n");
+			trafficGeneratorWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static BufferedWriter ServerProcesserWriter = null;
+
+	public static void ServerProcesserLog(String logString) {
+		try {
+			if (ServerProcesserWriter == null) {
+				ServerProcesserWriter = new BufferedWriter(new FileWriter("temp/ServerProcesser.txt"));
+//				ServerProcesserWriter = new BufferedWriter(new FileWriter("temp/ServerProcesser.txt", true));
+			}
+			ServerProcesserWriter.write(logString + "\n");
+			ServerProcesserWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static BufferedWriter bufferEmptierWriter = null;
+
+	public static void bufferEmptierLog(String logString) {
+		try {
+			if (bufferEmptierWriter == null) {
+				// bufferEmptierWriter = new BufferedWriter(new FileWriter("temp/bufferEmptier.txt", true));
+				bufferEmptierWriter = new BufferedWriter(new FileWriter("temp/bufferEmptier.txt"));
+			}
+			bufferEmptierWriter.write(logString + "\n");
+			bufferEmptierWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void log(String logString) {
 		System.out.println(" Logger :::: " + logString);
 	}
-	
+
 	public static void main(String[] args) {
 		GlobalConfig.init();
 		System.out.println(GlobalConfig.mapping.get(GlobalConfig.tempoNs[0]));
