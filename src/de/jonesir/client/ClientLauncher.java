@@ -132,24 +132,10 @@ public class ClientLauncher {
 		
 		// tell the server to terminate the simulation completely and do the final logging work
 		informServerOfSimuTermination();
-
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		// terminate client threads
 		terminateClientThreads();
 		
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		log("------============ ALL SIMULATIONS FINISHES ============-----------");
-
-		System.exit(0);
 	}
 
 	@SuppressWarnings("unchecked")

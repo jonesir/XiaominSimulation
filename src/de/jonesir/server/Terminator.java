@@ -26,9 +26,8 @@ public class Terminator implements Runnable {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				String readString;
 				while (!stop) {
-					ServerProcesser.stop = true;
 					readString = reader.readLine();
-					log("readString = " + readString);
+					//log("readString = " + readString);
 					if (readString != null) {
 						if(readString.contains(":")){// next simulation with new configuration
 							int confNumber = Integer.parseInt(readString.split(":")[1]);
@@ -41,14 +40,13 @@ public class Terminator implements Runnable {
 							log(GlobalConfig.NEXT_ROUND);
 							resetServer(false, 0);
 						}else if (readString.equals(GlobalConfig.SIMU_TERMINATE)) { // stop the complete simulation
-							ServerProcesser.stop = true;// stop the threads waiting for data
-							BufferEmptier.stop = true; // stop the buffer emptier
-							
 							// wait for 3 seconds and stop
-							Thread.sleep(3000);
+							Thread.sleep(5000);
 							log(" Complete Simulation Terminates");
 							Logger.logAverage();
-							
+							ServerProcesser.stop = true;// stop the threads waiting for data
+							BufferEmptier.stop = true; // stop the buffer emptier
+							this.stop = true;
 						}
 						// set the time stamp of ending processing the SHARED_BUFFER
 						GlobalConfig.end = System.nanoTime();

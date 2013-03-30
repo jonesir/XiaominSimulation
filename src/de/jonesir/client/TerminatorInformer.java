@@ -28,7 +28,7 @@ public class TerminatorInformer implements Runnable {
 			while (!stop) {
 				dataString = buffer.take();
 				log("dataString = " + dataString);
-				writer.write(dataString);
+				writer.write(dataString+"\n");
 				writer.flush();
 			}
 			writer.close();
