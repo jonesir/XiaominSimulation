@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -21,187 +22,197 @@ import de.jonesir.algo.GlobalConfig;
  * 
  */
 public class ClientLauncher {
-    // different ports for data link and command sending
-    public static final int port1 = 4189, port2 = 4190, port3 = 4191, port4 = 4192, terminatorPort = 4193; // 4
+	// each port stands for a link or command port
+	public static final int[] ports = { 4189, 4190, 4191, 4192, 4193 };
+	public static final Random random = new Random();// generate random number within range
 
-    public static final boolean encoded = true; // decide whether to be tranfered data is encoded or not
-    public static final int linkCount = 4; // number of links through which data will be sent
-    public static final int blockCount = 1000; // number of total blocks need
-    public static final Random random = new Random();// generate random number within range
-    public static final int bits = 65;// bits number in binary
-    // to be generated and sent
-    // initialize 4 linked blocking queue as 4 links
-    public static LinkedBlockingQueue<String> buffer1 = new LinkedBlockingQueue<String>();
-    public static LinkedBlockingQueue<String> buffer2 = new LinkedBlockingQueue<String>();
-    public static LinkedBlockingQueue<String> buffer3 = new LinkedBlockingQueue<String>();
-    public static LinkedBlockingQueue<String> buffer4 = new LinkedBlockingQueue<String>();
+	@SuppressWarnings("rawtypes")
+	public static LinkedBlockingQueue[] buffers = new LinkedBlockingQueue[GlobalConfig.links_amount];
+	public static LinkedBlockingQueue<String> terminationBuffer = new LinkedBlockingQueue<String>();
 
-    @SuppressWarnings("resource")
-    public static void main(String[] args) {
-	// start the sender thread to send traffic once data is available in
-	// each queue
-	// the 4 threads are each responsible for 1 link
-	// get block data from each one and send it to corresponding destination
-	new TrafficGenerator(Server.port1, 1).start();
-	new TrafficGenerator(Server.port2, 2).start();
-	new TrafficGenerator(Server.port3, 3).start();
-	new TrafficGenerator(Server.port4, 4).start();
+	private static String[] packetUnit = new String[GlobalConfig.links_amount];
+	private static int packetUnitIndex = 0;
+	
+	@SuppressWarnings("unchecked")
+	private static void init() {
+		// prepare the possible parameters combination list
+		GlobalConfig.init();// after this, the parameter list has entries with all combinations
 
-	// prepare the possible parameters combination list
-	GlobalConfig.generateParams();// after this, the parameter list has entries with all combinations
-	int simulation_counter = 1;
+		// generate buffers
+		for (int i = 0; i < GlobalConfig.links_amount; i++) {
+			buffers[i] = new LinkedBlockingQueue<String>();
+		}
 
-	// iterate through all the combinations
-	for (int[] params : GlobalConfig.params) {
+		// generate thread for each link(buffer)
+		Thread[] threads = new Thread[GlobalConfig.links_amount];
+		for (int i = 0; i < GlobalConfig.links_amount; i++) {
+			Thread tmp = new Thread(new TrafficGenerator(Server.ports[i], i));
+			threads[i] = new Thread(new TrafficGenerator(Server.ports[i], i));
+			tmp.start();
+		}
+		
+		// generate terminator informer thread
+		new Thread(new TerminatorInformer()).start();
+	}
 
-	    // initialized parameters for each round of simulation
-	    GlobalConfig.refreshParams(params[0], params[1], params[2], params[3]);
-	    System.out.println("Total Packets: " + params[0] + ", Buffer Size: " + params[1] + ", Tempo: " + params[2] + ", Encoded Flag: " + params[3]);
+	@SuppressWarnings({ "resource", "unchecked" })
+	public static void main(String[] args) {
+		// init work
+		init();
 
-	    String[] packetUnit = new String[linkCount];
-	    int packetUnitIndex = 0;
-	    // generate data and put them into each queue
-	    for (int i = 0; i < GlobalConfig.amount_of_packets; i++) {
-		/* Scenario without coding */
-		if (!GlobalConfig.encoded) {
-		    // generate a block
-		    Block dataBlock = new Block(0, null);
+		// iterate through all the parameter combinations
+		for (int confNumber = 0; confNumber < GlobalConfig.params.size(); confNumber++) {
 
-		    // get the id of the block and assign the block to corresponding
-		    // link
-		    // block will be assigned to certain buffer according to its ID
-		    // modulo 4
-		    switch ((int) dataBlock.getBlockID() % ClientLauncher.linkCount) {
-		    case 0:
-			// System.out.println("switch 0");
-			ClientLauncher.buffer1.add(dataBlock.toBinaryString());
-			// System.out.println("Buffer Size 1 : " +
-			// ClientLauncher.buffer1.size());
-			break;
-		    case 1:
-			// System.out.println("switch 1");
-			ClientLauncher.buffer2.add(dataBlock.toBinaryString());
-			// System.out.println("Buffer Size 2 : " +
-			// ClientLauncher.buffer2.size());
-			break;
-		    case 2:
-			// System.out.println("switch 2");
-			ClientLauncher.buffer3.add(dataBlock.toBinaryString());
-			// System.out.println("Buffer Size 3 : " +
-			// ClientLauncher.buffer3.size());
-			break;
-		    case 3:
-			// System.out.println("switch 3");
-			ClientLauncher.buffer4.add(dataBlock.toBinaryString());
-			// System.out.println("Buffer Size 4 : " +
-			// ClientLauncher.buffer4.size());
-			break;
-		    default:
-			break;
-		    }
-		    /* Scenario with coding */
-		} else {
-		    // generate Packet
-		    Packet dataPacket = new Packet();
-		    for (int j = 0; j < Packet.size; j++) {
+			// initialized parameters for each simulation under certain configurations
+			GlobalConfig.refreshParams(GlobalConfig.params.get(confNumber)[0], GlobalConfig.params.get(confNumber)[1], GlobalConfig.params.get(confNumber)[2], GlobalConfig.params.get(confNumber)[3], GlobalConfig.params.get(confNumber)[4]);
+			System.out.println("Simulation with following configuration: ");
+			System.out.println("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
+			System.out.println("begins ... ");
+			for (int simuCount = 0; simuCount < GlobalConfig.rounds_of_simulation_per_configuration; simuCount++) {
+				System.out.println("Simluation Round " + (simuCount + 1) + " begins");
+				// generate data and put them into each queue
+				for (int i = 0; i < GlobalConfig.packets_sent_in_one_simulation; i++) {
+					/* Scenario with coding */
+					if (GlobalConfig.encoded) {
+						sentPackets(i);
+						/* Scenario without coding */
+					} else {
+						sentBlocks();
+					}
+				}
+
+				try {
+					Thread.sleep(500);
+					// tell the server to do corresponding reset work for the next round of simulation with the same configuration
+					informServerOfNextRound();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				System.out.println("Simluation Round " + (simuCount + 1) + " finishes");
+
+				// reset all resources for the new round of simulation
+				reset();
+
+				// after 1 seconds, begin another simulation with the same configuration
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+			try {
+				Thread.sleep(500);
+				// tell the server to do corresponding reset work for the simulation with new configuration
+				informServerOfNextConfig(confNumber);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			System.out.println("Simulation with following configuration: ");
+			System.out.println("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
+			System.out.println("finishes ... ");
+			System.out.println("==================================================");
+
+			// after 1 seconds, begin another simulation with new configuration
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		// tell the server to terminate the simulation completely and do the final logging work
+		informServerOfSimuTermination();
+
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		// terminate client threads
+		terminateClientThreads();
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("------============ ALL SIMULATIONS FINISHES ============-----------");
+
+		System.exit(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void sentBlocks() {
+		// generate a block
+		Block dataBlock = new Block(0, null);
+
+		// send the block through corresponding link
+		int bufferNumber = (int) dataBlock.getBlockID() % GlobalConfig.links_amount;
+		((LinkedBlockingQueue<String>) buffers[bufferNumber]).add(dataBlock.toBinaryString());
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void sentPackets(int p) {
+		// generate Packet
+		Packet dataPacket = new Packet();
+		for (int j = 0; j < Packet.size; j++) {
 			dataPacket.addBlock(new Block(0, dataPacket));
-		    }
-		    // put packet's binary string into array, which will
-		    packetUnit[packetUnitIndex++] = dataPacket.toBinaryString();
+		}
+		// put packet's binary string into array, which will
+		packetUnit[packetUnitIndex++] = dataPacket.toBinaryString();
 
-		    // A generation of Packet has been collected, it is sent to be encoded and then sent to server
-		    if ((i + 1) % 4 == 0) {
+		// A generation of Packet has been collected, it is sent to be encoded and then sent to server
+		if ((p + 1) % 4 == 0) {
 			// encode the generation of packets
 			String[] encodedPacket = Encoder.encode_apache(packetUnit);
 
 			// place each of the packet in the generation into different Linked Blocking Queue
-			ClientLauncher.buffer1.add(encodedPacket[0]);
-			ClientLauncher.buffer2.add(encodedPacket[1]);
-			ClientLauncher.buffer3.add(encodedPacket[2]);
-			ClientLauncher.buffer4.add(encodedPacket[3]);
+			for (int i = 0; i < GlobalConfig.links_amount; i++) {
+				((LinkedBlockingQueue<String>) buffers[i]).add(encodedPacket[i]);
+			}
 
 			// reset
 			packetUnitIndex = 0;
-		    }
 		}
 
-	    }
-
-	    // after half second, send the termination command to terminate this round of simulation and log the result
-	    try {
-		Thread.sleep(500);
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-	    }
-
-	    // send termination command to Terminator.java on the server side
-	    try {
-		Socket terminator = new Socket(TrafficGenerator.address, GlobalConfig.terminatorPort);
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(terminator.getOutputStream()));
-		writer.write("terminate");
-		writer.flush();
-	    } catch (UnknownHostException e) {
-		e.printStackTrace();
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    }
-	    System.out.println("Simluation Round " + (simulation_counter++) + " finishes");
-
-	    // after 5 seconds, begin another simulation with new combination of parameters
-	    try {
-		Thread.sleep(5000);
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-	    }
-	    // reset all resources for the new round of simulation
-	    reset();
 	}
 
-	// close connections to stop client threads
-	TrafficGenerator.closeConnection = true;
-
-	try {
-	    Thread.sleep(500);
-	} catch (InterruptedException e) {
-	    e.printStackTrace();
-	}
-	ClientLauncher.buffer1.add("completeTerminate");
-	ClientLauncher.buffer2.add("completeTerminate");
-	ClientLauncher.buffer3.add("completeTerminate");
-	ClientLauncher.buffer4.add("completeTerminate");
-
-	// send termination command to Terminator.java on the server side
-	try {
-	    Socket terminator = new Socket(TrafficGenerator.address, GlobalConfig.terminatorPort);
-	    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(terminator.getOutputStream()));
-	    writer.write("completeTerminate");
-	    writer.flush();
-	    // After five second of all the simulations, close command connection
-	    Thread.sleep(5000);
-	    writer.close();
-	} catch (UnknownHostException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	} catch (InterruptedException e) {
-	    e.printStackTrace();
+	private static void informServerOfNextRound() {
+		ClientLauncher.terminationBuffer.add(GlobalConfig.NEXT_ROUND);
 	}
 
-	System.out.println("Client Stops Sending !");
+	private static void informServerOfNextConfig(int configNumber) {
+		ClientLauncher.terminationBuffer.add(GlobalConfig.NEXT_CONFIG + ":" + configNumber);
+	}
 
-	System.exit(0);
-    }
+	private static void informServerOfSimuTermination() {
+		ClientLauncher.terminationBuffer.add(GlobalConfig.SIMU_TERMINATE);
+	}
+	
+	private static void terminateClientThreads(){
+		TrafficGenerator.stop = true;
+	}
 
-    public static void reset() {
-	Block.resetID();
-	Packet.resetID();
-	ClientLauncher.buffer1.clear();
-	ClientLauncher.buffer2.clear();
-	ClientLauncher.buffer3.clear();
-	ClientLauncher.buffer4.clear();
-    }
+	@SuppressWarnings("unchecked")
+	public static void reset() {
+		Block.resetID();
+		Packet.resetID();
+		for (LinkedBlockingQueue<String> buffer : ClientLauncher.buffers) {
+			buffer.clear();
+		}
+	}
 
-    public static void log(String logString) {
-	// System.out.println("ClientLauncher - " + logString);
-    }
+	public static void log(String logString) {
+		// System.out.println("ClientLauncher - " + logString);
+	}
 }

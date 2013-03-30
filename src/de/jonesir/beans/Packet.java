@@ -2,6 +2,7 @@ package de.jonesir.beans;
 
 import java.util.ArrayList;
 
+import de.jonesir.algo.GlobalConfig;
 import de.jonesir.algo.UniversalFunctions;
 
 /**
@@ -20,7 +21,7 @@ public class Packet {
 	private ArrayList<Block> blocks = null;
 	private long ID;
 	private static final int IDLength = 8;
-	public static final int size = 1;
+	public static int size = GlobalConfig.packet_size;
 	public static final int lengthWithouIdentifier = Packet.size * Block.lengthWithoutIdentifier;
 	public static final int length = Packet.lengthWithouIdentifier + Packet.IDLength;
 	private static long IDGen = 0;

@@ -13,49 +13,73 @@ import de.jonesir.client.ClientLauncher;
 
 public class Terminator implements Runnable {
 
-    private ArrayList<Thread> threads;
+	private volatile boolean stop = false;
 
-    public Terminator(ArrayList<Thread> threads) {
-	this.threads = threads;
-    }
+	@SuppressWarnings("resource")
+	@Override
+	public synchronized void run() {
+		log("Terminator is running ... ");
+			try {
+				ServerSocket ss = new ServerSocket(ClientLauncher.ports[4]);
+				Socket s = ss.accept();
 
-    @Override
-    public void run() {
-	System.out.println("Terminator is running ... ");
-	try {
-	    ServerSocket ss = new ServerSocket(ClientLauncher.terminatorPort);
-	    Socket s = ss.accept();
-
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-	    String readString;
-	    while (true) {
-		readString = reader.readLine();
-		if (readString.equals("terminate")) {
-		    System.out.println("Simulation " + GlobalConfig.paramCombinationCounter + " terminates");
-
-		    // set the time stamp of ending processing the SHARED_BUFFER
-		    GlobalConfig.end = System.nanoTime();
-		    // log the result
-		    Logger.logResult();
-
-		    // refresh parameters and reset variables
-		    Server.refreshParams();
-		    Server.resetParams();
-		}
-		if (readString.equals("completeTerminate")) {
-		    for (Thread t : threads) {
-			t.stop();
-		    }
-		    Thread.sleep(3000);
-		    System.exit(0);
-		}
-
-	    }
-	} catch (IOException e) {
-	    e.printStackTrace();
-	} catch (InterruptedException e) {
-	    e.printStackTrace();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				String readString;
+				while (!stop) {
+					ServerProcesser.stop = true;
+					readString = reader.readLine();
+					log("readString = " + readString);
+					if (readString != null) {
+						if(readString.contains(":")){// next simulation with new configuration
+							int confNumber = Integer.parseInt(readString.split(":")[1]);
+							resetServer(true, confNumber);
+							log("Simulation " + (confNumber-1) + " terminates");
+							log("Simulation with new configuration: ");
+							log("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
+							log("begins ... ");
+						}else if (readString.equals(GlobalConfig.NEXT_ROUND)) {// next round of simulation with the same configuration
+							resetServer(false, 0);
+						}else if (readString.equals(GlobalConfig.SIMU_TERMINATE)) { // stop the complete simulation
+							ServerProcesser.stop = true;// stop the threads waiting for data
+							BufferEmptier.stop = true; // stop the buffer emptier
+							
+							// wait for 3 seconds and stop
+							Thread.sleep(3000);
+							log(" Complete Simulation Terminates");
+							Logger.logAverage();
+							
+						}
+						// set the time stamp of ending processing the SHARED_BUFFER
+						GlobalConfig.end = System.nanoTime();
+						// log the result
+						Logger.logResult();
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 	}
-    }
-
+	
+	private void resetServer(boolean confChanged, int confNumber){
+		if(confChanged){
+			int[] temp = GlobalConfig.params.get(confNumber);
+			GlobalConfig.refreshParams(temp[0], temp[1], temp[2], temp[3], temp[4]);
+		}
+		
+		synchronized (Server.lock) {
+			Server.SHARED_BUFFER.clear();
+		}
+		GlobalConfig.begin = 0;
+		GlobalConfig.end = 0;
+		synchronized (ServerProcesser.lock1) {
+			Server.NUMBER_OF_LOST_PACKETS = 0;
+		}
+	}
+	
+	
+	private void log(String logString){
+		System.out.println("Terminator ::: " + logString);
+	}
 }

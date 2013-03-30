@@ -1,8 +1,16 @@
 package de.jonesir.test;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import de.jonesir.algo.GlobalConfig;
+import de.jonesir.client.ClientLauncher;
+import de.jonesir.client.TrafficGenerator;
 
 public class Test {
 
@@ -14,29 +22,41 @@ public class Test {
 	/**
 	 * @param args
 	 */
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-	    for(int i = 0 ; i < AMOUNT_OF_PACKETS.length ; i++){
-		for(int j = 0 ; j < MAX_BUFFER_SIZE.length ; j++){
-		    for(int k = 0 ; k < TEMPO.length ; k++){
-			for(int m = 0 ; m < ENCODE.length ; m++){
-			    try {
-				String[] command1 = {"/bin/sh","-c","java -jar /home/jonesir/Download/Simulation/Server.jar " + AMOUNT_OF_PACKETS[i] + " " + MAX_BUFFER_SIZE[j] + " " + TEMPO[k] + " " + ENCODE[m]};
-				Runtime.getRuntime().exec(command1);
-				Thread.sleep(1000);
-				String[] command2 = {"/bin/sh","-c","java -jar /home/jonesir/Download/Simulation/ClientLauncher.jar " + AMOUNT_OF_PACKETS[i] + " " + MAX_BUFFER_SIZE[j] + " " + TEMPO[k] + " " + ENCODE[m]};
-				Runtime.getRuntime().exec(command2);
-				Thread.sleep(25000);
-				System.out.println("Round Finishes");
-			    } catch (IOException e) {
-				e.printStackTrace();
-			    } catch (InterruptedException e) {
-				e.printStackTrace();
-			    }
-			}
-		    }
+		try {
+			Socket s = new Socket(TrafficGenerator.address,ClientLauncher.ports[4]);
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+			writer.write(GlobalConfig.NEXT_ROUND);
+			writer.flush();
+			writer.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-	    }
-	    System.out.println("Simulation Terminates!!!");
+//	    for(int i = 0 ; i < AMOUNT_OF_PACKETS.length ; i++){
+//		for(int j = 0 ; j < MAX_BUFFER_SIZE.length ; j++){
+//		    for(int k = 0 ; k < TEMPO.length ; k++){
+//			for(int m = 0 ; m < ENCODE.length ; m++){
+//			    try {
+//				String[] command1 = {"/bin/sh","-c","java -jar /home/jonesir/Download/Simulation/Server.jar " + AMOUNT_OF_PACKETS[i] + " " + MAX_BUFFER_SIZE[j] + " " + TEMPO[k] + " " + ENCODE[m]};
+//				Runtime.getRuntime().exec(command1);
+//				Thread.sleep(1000);
+//				String[] command2 = {"/bin/sh","-c","java -jar /home/jonesir/Download/Simulation/ClientLauncher.jar " + AMOUNT_OF_PACKETS[i] + " " + MAX_BUFFER_SIZE[j] + " " + TEMPO[k] + " " + ENCODE[m]};
+//				Runtime.getRuntime().exec(command2);
+//				Thread.sleep(25000);
+//				System.out.println("Round Finishes");
+//			    } catch (IOException e) {
+//				e.printStackTrace();
+//			    } catch (InterruptedException e) {
+//				e.printStackTrace();
+//			    }
+//			}
+//		    }
+//		}
+//	    }
+//	    System.out.println("Simulation Terminates!!!");
 //	    try {
 //		String[] commands = {"/bin/sh","-c","java -jar /home/jonesir/Download/Simulation/Server.jar " + AMOUNT_OF_PACKETS[0] + " " + MAX_BUFFER_SIZE[0] + " " + TEMPO[1] + " " + ENCODE[1]};
 //		Process p = Runtime.getRuntime().exec(commands);

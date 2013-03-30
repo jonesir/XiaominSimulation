@@ -16,66 +16,65 @@ import de.jonesir.algo.GlobalConfig;
  */
 public class Server {
 
-    // four ports stand for 4 links
-    public static final int port1 = 4189, port2 = 4190, port3 = 4191, port4 = 4192;
+	// each port stands for a link or command port
+	public static final int[] ports = { 4189, 4190, 4191, 4192, 4193 };
 
-    // shared buffer to store incoming data in time order
-    public static LinkedList<String> SHARED_BUFFER = new LinkedList<String>();
+	// shared buffer to store incoming data in time order
+	public static LinkedList<String> SHARED_BUFFER = new LinkedList<String>();
+	
+	public static Thread[] threads = new Thread[GlobalConfig.links_amount];
 
-    // shared buffer size
-    public static final int MAX_SHARED_BUFFER_SIZE = 164;
+	public static Thread bufferEmptier = new Thread(new BufferEmptier());
+	// Counter to recorde the number of lost packets, this is important variable for logging the simulation result
+	public static int NUMBER_OF_LOST_PACKETS = 0;
 
-    // Counter to recorde the number of lost packets, this is important variable for logging the simulation result
-    public static int NUMBER_OF_LOST_PACKETS = 0;
+	// Synchronized lock object
+	public static int[] lock = new int[0];
 
-    // Synchronized lock object
-    public static int[] lock = new int[0];
-
-    public static void resetParams() {
-	synchronized (Server.lock) {
-	    Server.SHARED_BUFFER.clear();
-	}
-	GlobalConfig.begin = 0;
-	GlobalConfig.end = 0;
-	synchronized (ServerProcesser.lock1) {
-	    Server.NUMBER_OF_LOST_PACKETS = 0;
-	}
-    }
-
-    public static void refreshParams() {
-	int[] temp = GlobalConfig.params.get(GlobalConfig.paramCombinationCounter++);
-	GlobalConfig.refreshParams(temp[0], temp[1], temp[2], temp[3]);
-    }
-
-    public static void main(String[] args) {
-	// prepare the possible parameters list
-	GlobalConfig.generateParams();
-	refreshParams();
-
-	// buffer emptier remove the data from shared buffer if complete generation has been received
-	Thread bufferEmptier = new Thread(new BufferEmptier());
-
-	// four thread which generate server socket listening on different ports for different links
-	// these links put incoming data directly into the shared buffer
-	Thread sp1 = new Thread(new ServerProcesser(GlobalConfig.port1));
-	Thread sp2 = new Thread(new ServerProcesser(GlobalConfig.port2));
-	Thread sp3 = new Thread(new ServerProcesser(GlobalConfig.port3));
-	Thread sp4 = new Thread(new ServerProcesser(GlobalConfig.port4));
-
-	// create a list of threads
-	ArrayList<Thread> threads = new ArrayList<Thread>();
-	threads.add(bufferEmptier);
-	threads.add(sp1);
-	threads.add(sp2);
-	threads.add(sp3);
-	threads.add(sp4);
-
-	// start threads
-	for (Thread t : threads) {
-	    t.start();
+	public static void resetParams() {
+		synchronized (Server.lock) {
+			Server.SHARED_BUFFER.clear();
+		}
+		GlobalConfig.begin = 0;
+		GlobalConfig.end = 0;
+		synchronized (ServerProcesser.lock1) {
+			Server.NUMBER_OF_LOST_PACKETS = 0;
+		}
 	}
 
-	// start the terminator thread
-	new Thread(new Terminator(threads)).start();
-    }
+	public static void main(String[] args) {
+		// init work
+		init();
+
+		// buffer emptier remove the data from shared buffer if complete generation has been received
+		Thread bufferEmptier = new Thread(new BufferEmptier());
+
+		// create for each link a thread to read data from port and insert it into shared buffer
+		for(int i = 0 ; i < GlobalConfig.links_amount ; i++){
+			threads[i] = new Thread(new ServerProcesser(Server.ports[i]));
+		}
+
+		// start port listening thread
+		for (int i = 0 ; i < threads.length ; i++) {
+			threads[i].start();
+		}
+
+		// start the emptier thread
+		bufferEmptier.start();
+		
+		// start the terminator thread
+		new Thread(new Terminator()).start();
+	}
+
+	private static void init() {
+		// prepare the possible parameters list
+		GlobalConfig.init();
+		setFirstSimuParameter();
+	}
+
+	private static void setFirstSimuParameter() {
+		int[] temp = GlobalConfig.params.get(0);
+		GlobalConfig.refreshParams(temp[0], temp[1], temp[2], temp[3], temp[4]);
+	}
+	
 }
