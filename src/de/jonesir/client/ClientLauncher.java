@@ -106,7 +106,8 @@ public class ClientLauncher {
 			try {
 				Thread.sleep(500);
 				// tell the server to do corresponding reset work for the simulation with new configuration
-				informServerOfNextConfig(confNumber);
+				if(!((confNumber+1) == GlobalConfig.params.size()))
+				    informServerOfNextConfig(confNumber+1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -116,6 +117,9 @@ public class ClientLauncher {
 			log("finishes ... ");
 			log("==================================================");
 
+			// reset all resources for the simulation with new configuration
+			reset();
+			
 			// after 1 seconds, begin another simulation with new configuration
 			try {
 				Thread.sleep(1000);
@@ -152,7 +156,7 @@ public class ClientLauncher {
 	private static void sentPackets(int p) {
 		// generate Packet
 		Packet dataPacket = new Packet();
-		for (int j = 0; j < Packet.size; j++) {
+		for (int j = 0; j < Packet.getPacketSize(); j++) {
 			dataPacket.addBlock(new Block(0, dataPacket));
 		}
 		// put packet's binary string into array, which will

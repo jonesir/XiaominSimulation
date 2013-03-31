@@ -21,8 +21,7 @@ public class Packet {
 	private ArrayList<Block> blocks = null;
 	private long ID;
 	private static final int IDLength = 8;
-	public static int size = GlobalConfig.packet_size;
-	public static final int lengthWithouIdentifier = Packet.size * Block.lengthWithoutIdentifier;
+	public static final int lengthWithouIdentifier = Packet.getPacketSize() * Block.lengthWithoutIdentifier;
 	public static final int length = Packet.lengthWithouIdentifier + Packet.IDLength;
 	private static long IDGen = 0;
 	private Generation generation = null;
@@ -68,6 +67,10 @@ public class Packet {
 			IDGen = 0;
 		}
 		return IDGen++;
+	}
+	
+	public static int getPacketSize(){
+	    return GlobalConfig.packet_size;
 	}
 	
 	public static void resetID(){

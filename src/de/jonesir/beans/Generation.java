@@ -14,7 +14,7 @@ public class Generation {
 	private long ID;
 	private static final int IDLength = 16;
 	public static final int size = 4;
-	public static int length = Packet.size * Packet.length;
+	public static int length = Packet.getPacketSize() * Packet.length;
 	private static long IDGen = 0;
 
 	public Generation() {

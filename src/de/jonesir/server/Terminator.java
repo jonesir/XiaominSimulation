@@ -33,11 +33,20 @@ public class Terminator implements Runnable {
 							int confNumber = Integer.parseInt(readString.split(":")[1]);
 							resetServer(true, confNumber);
 							log("Simulation " + (confNumber-1) + " terminates");
+							// set the time stamp of ending processing the SHARED_BUFFER
+							GlobalConfig.end = System.nanoTime();
+							// log the result
+							Logger.logResult();
 							log("Simulation with new configuration: ");
 							log("Total Packets: " + GlobalConfig.params.get(confNumber)[0] + ", Buffer Size: " + GlobalConfig.params.get(confNumber)[1] + ", Tempo: " + GlobalConfig.params.get(confNumber)[2] + ", Encoded Flag: " + GlobalConfig.params.get(confNumber)[3] + ", Packet Size: " + GlobalConfig.params.get(confNumber)[4]);
 							log("begins ... ");
 						}else if (readString.equals(GlobalConfig.NEXT_ROUND)) {// next round of simulation with the same configuration
 							log(GlobalConfig.NEXT_ROUND);
+							GlobalConfig.end = System.nanoTime();
+							// log the result
+							Logger.logResult();
+							// set the time stamp of ending processing the SHARED_BUFFER
+							GlobalConfig.end = System.nanoTime();
 							resetServer(false, 0);
 						}else if (readString.equals(GlobalConfig.SIMU_TERMINATE)) { // stop the complete simulation
 							// wait for 3 seconds and stop
@@ -48,12 +57,11 @@ public class Terminator implements Runnable {
 							BufferEmptier.stop = true; // stop the buffer emptier
 							this.stop = true;
 						}
-						// set the time stamp of ending processing the SHARED_BUFFER
-						GlobalConfig.end = System.nanoTime();
-						// log the result
-						Logger.logResult();
+						
+						
 					}
 				}
+				System.out.println("DONE!");
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -72,6 +80,7 @@ public class Terminator implements Runnable {
 		}
 		GlobalConfig.begin = 0;
 		GlobalConfig.end = 0;
+		GlobalConfig.shouldBegin = true;
 		synchronized (ServerProcesser.lock1) {
 			Server.NUMBER_OF_LOST_PACKETS = 0;
 		}

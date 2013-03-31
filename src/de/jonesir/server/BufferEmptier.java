@@ -30,7 +30,7 @@ public class BufferEmptier implements Runnable {
 		while (!stop) {
 			// while (!Thread.currentThread().isInterrupted()) {
 			synchronized (Server.lock) {
-				if ((a++) % 1000000 == 0)
+				if ((a++) % 100000000 == 0)
 					log("Server.SHARED_BUFFER.size() === " + Server.SHARED_BUFFER.size());
 				if (Server.SHARED_BUFFER.size() != 0) {
 					if (GlobalConfig.shouldBegin) {
@@ -141,8 +141,8 @@ public class BufferEmptier implements Runnable {
 	}
 
 	public void log(String logString) {
-		// System.out.println("BufferEmptier ::: " + logString);
-		Logger.bufferEmptierLog("BufferEmptier ::: " + logString);
+		 System.out.println("BufferEmptier ::: " + logString);
+		//Logger.bufferEmptierLog("BufferEmptier ::: " + logString);
 	}
 
 }
