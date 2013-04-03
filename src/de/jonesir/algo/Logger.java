@@ -26,7 +26,7 @@ public class Logger {
 	private static String result_multipath = null;
 
 	private static String lostRatioKey = "Packet Lost Ratio  : ";
-	private static String throughputKey = "Throughput         : ";
+	private static String throughputKey = "Throughput";
 	private static String pps = " Packets per Second";
 
 	@SuppressWarnings("resource")
@@ -51,7 +51,7 @@ public class Logger {
 		writerString += "Packets Lost       : " + Server.NUMBER_OF_LOST_PACKETS + "\n";
 		writerString += lostRatioKey + 100 * ((double) Server.NUMBER_OF_LOST_PACKETS) / GlobalConfig.packets_sent_in_one_simulation + "%\n";
 		writerString += "Total Time Used(ns): " + (GlobalConfig.end - GlobalConfig.begin) + "\n";
-		writerString += throughputKey + (double) (GlobalConfig.packets_sent_in_one_simulation - Server.NUMBER_OF_LOST_PACKETS) / ((GlobalConfig.end - GlobalConfig.begin) / (1000000000)) + pps + "\n";
+		writerString += throughputKey + "     : " + (double) (GlobalConfig.packets_sent_in_one_simulation - Server.NUMBER_OF_LOST_PACKETS) / ((double)(GlobalConfig.end - GlobalConfig.begin) / (1000000000)) + pps + "\n";
 		writerString += "-----------------------------\n\n";
 		
 		result_encode = "results/A_packet_has_" + GlobalConfig.packet_size + "_blocks_" + GlobalConfig.mapping.get(GlobalConfig.tempoNs[0]) + "_" + GlobalConfig.MAX_SHARED_BUFFER_SIZE + "_GF8_Encode.txt";
@@ -130,6 +130,9 @@ public class Logger {
 			}
 
 			writerString += "Average Throughput : " + totalThroughput / throughputs.size() + "\n";
+			for(String throughput : throughputs){
+			    System.out.println(throughput);
+			}
 		}
 
 		try {
@@ -237,8 +240,7 @@ public class Logger {
 	}
 
 	public static void main(String[] args) {
-		GlobalConfig.init();
-		System.out.println(GlobalConfig.mapping.get(GlobalConfig.tempoNs[0]));
+		Logger.logAverage();
 	}
 
 }
